@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton;
+namespace AntonioPrimera\Site;
 
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use VendorName\Skeleton\Commands\SkeletonCommand;
+use AntonioPrimera\Site\Commands\SiteCommand;
 
-class SkeletonServiceProvider extends PackageServiceProvider
+class SiteServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
@@ -16,10 +16,11 @@ class SkeletonServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('skeleton')
+            ->name('laravel-site')
             ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_migration_table_name_table')
-            ->hasCommand(SkeletonCommand::class);
+            //->hasViews()
+            //->hasCommand(SiteCommand::class)
+            ->hasMigrations(['create_sections_table', 'create_bits_table'])
+            ->runsMigrations();
     }
 }

@@ -1,9 +1,10 @@
 <?php
+
 use AntonioPrimera\Site\Database\DataMigration;
 use AntonioPrimera\Site\Database\ModelBuilders\SectionBuilder;
 
-return new class extends DataMigration {
-
+return new class extends DataMigration
+{
     public function up(): void
     {
         SectionBuilder::create(
@@ -23,8 +24,5 @@ return new class extends DataMigration {
         //$this->createSection('contact', 'Contact', 'mail', 'Contact', 'Contact page contents');
     }
 
-    public function down(): void
-    {
-
-    }
+    public function down(): void {}
 };

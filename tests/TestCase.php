@@ -2,9 +2,9 @@
 
 namespace AntonioPrimera\Site\Tests;
 
+use AntonioPrimera\Site\SiteServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use AntonioPrimera\Site\SiteServiceProvider;
 
 class TestCase extends Orchestra
 {

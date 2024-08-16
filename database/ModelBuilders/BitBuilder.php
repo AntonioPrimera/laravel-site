@@ -1,4 +1,5 @@
 <?php
+
 namespace AntonioPrimera\Site\Database\ModelBuilders;
 
 use AntonioPrimera\Site\Database\ModelBuilders\Traits\HandleSiteComponentSingleImage;
@@ -21,16 +22,15 @@ class BitBuilder extends SiteComponentBuilder
 
     public static function create(
         Section|string $section,
-        string|null $uid,
-        string|null $type,
-        string|null $name,
-        string|null $icon = null,
-        string|null $title = null,
-        string|null $contents = null,
+        ?string $uid,
+        ?string $type,
+        ?string $name,
+        ?string $icon = null,
+        ?string $title = null,
+        ?string $contents = null,
         int $position = 0,
-        array|null $config = null
-    ): static
-    {
+        ?array $config = null
+    ): static {
         $sectionInstance = is_string($section) ? Section::where('uid', $section)->firstOrFail() : $section;
 
         $bit = $sectionInstance->bits()->create([
@@ -60,36 +60,42 @@ class BitBuilder extends SiteComponentBuilder
     public function setUid(string $uid): static
     {
         $this->siteComponent->uid = $uid;
+
         return $this;
     }
 
     public function setType(string $type): static
     {
         $this->siteComponent->type = $type;
+
         return $this;
     }
 
     public function setName(string $name): static
     {
         $this->siteComponent->name = $name;
+
         return $this;
     }
 
     public function setIcon(string $icon): static
     {
         $this->siteComponent->icon = $icon;
+
         return $this;
     }
 
     public function setTitle(string $title): static
     {
         $this->siteComponent->title = $title;
+
         return $this;
     }
 
     public function setContents(string $contents): static
     {
         $this->siteComponent->contents = $contents;
+
         return $this;
     }
 }

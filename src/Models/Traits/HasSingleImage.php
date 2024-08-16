@@ -1,4 +1,5 @@
 <?php
+
 namespace AntonioPrimera\Site\Models\Traits;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -11,6 +12,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  * Assign this trait to any model that needs to have a single image associated with it.
  *
  * Properties
+ *
  * @property Media|null $image
  * @property string $imageAlt
  */
@@ -42,8 +44,8 @@ trait HasSingleImage
     public function image(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->getImage(),
-            set: fn(Media $value) => $this->setImage($value->getPath())
+            get: fn () => $this->getImage(),
+            set: fn (Media $value) => $this->setImage($value->getPath())
         );
     }
 
@@ -53,8 +55,8 @@ trait HasSingleImage
     public function imageAlt(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->getImageAlt(),
-            set: fn(string $value) => $this->setImageAlt($value)
+            get: fn () => $this->getImageAlt(),
+            set: fn (string $value) => $this->setImageAlt($value)
         );
     }
 
@@ -63,7 +65,7 @@ trait HasSingleImage
     /**
      * Get the image for this model
      */
-    public function getImage(): Media|null
+    public function getImage(): ?Media
     {
         return $this->getFirstMedia('image');
     }
@@ -74,6 +76,7 @@ trait HasSingleImage
     public function setImage(string $path, string $alt = ''): static
     {
         $this->addMedia($path)->withCustomProperties(['alt' => $alt])->toMediaCollection('image');
+
         return $this;
     }
 
@@ -91,6 +94,7 @@ trait HasSingleImage
     public function setImageAlt(string $alt): static
     {
         $this->image?->setCustomProperty('alt', $alt)->save();
+
         return $this;
     }
 
@@ -117,6 +121,7 @@ trait HasSingleImage
     protected function mediaCatalog(string $fileName): string
     {
         $mediaCatalogDisk = config('site.media-catalog.disk');
+
         return Storage::disk($mediaCatalogDisk)->path($fileName);
     }
 

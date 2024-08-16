@@ -2,9 +2,9 @@
 
 namespace AntonioPrimera\Site;
 
+use AntonioPrimera\Site\Commands\SiteCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use AntonioPrimera\Site\Commands\SiteCommand;
 
 class SiteServiceProvider extends PackageServiceProvider
 {

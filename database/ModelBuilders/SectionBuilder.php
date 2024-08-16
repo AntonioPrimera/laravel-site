@@ -1,4 +1,5 @@
 <?php
+
 namespace AntonioPrimera\Site\Database\ModelBuilders;
 
 use AntonioPrimera\Site\Database\ModelBuilders\Traits\HandleSiteComponentSingleImage;
@@ -22,11 +23,10 @@ class SectionBuilder extends SiteComponentBuilder
     public static function create(
         string $uid,
         string $name,
-        string|null $title = null,
-        string|null $contents = null,
-        array|null $config = null
-    ): static
-    {
+        ?string $title = null,
+        ?string $contents = null,
+        ?array $config = null
+    ): static {
         $section = Section::create([
             'uid' => $uid,
             'name' => $name,
@@ -45,6 +45,7 @@ class SectionBuilder extends SiteComponentBuilder
     public static function from(Section|string $section): static
     {
         $sectionInstance = is_string($section) ? Section::where('uid', $section)->firstOrFail() : $section;
+
         return new static($sectionInstance);
     }
 
@@ -53,18 +54,21 @@ class SectionBuilder extends SiteComponentBuilder
     public function setName(string $name): static
     {
         $this->siteComponent->name = $name;
+
         return $this;
     }
 
     public function setTitle(string $title): static
     {
         $this->siteComponent->title = $title;
+
         return $this;
     }
 
     public function setContents(string $contents): static
     {
         $this->siteComponent->contents = $contents;
+
         return $this;
     }
 
@@ -74,16 +78,15 @@ class SectionBuilder extends SiteComponentBuilder
         string $uid,
         string $type,
         string $name,
-        string|null $icon = null,
-        string|null $title = null,
-        string|null $contents = null,
+        ?string $icon = null,
+        ?string $title = null,
+        ?string $contents = null,
         int $position = 0,
-        array|null $config = null,
-        string|null $mediaCatalogImage = null,
+        ?array $config = null,
+        ?string $mediaCatalogImage = null,
         string $imageAlt = '',
-        callable|null $build = null
-    ): static
-    {
+        ?callable $build = null
+    ): static {
         $builder = BitBuilder::create(
             section: $this->siteComponent,
             uid: $uid,
@@ -96,12 +99,14 @@ class SectionBuilder extends SiteComponentBuilder
             config: $config
         );
 
-        if ($mediaCatalogImage)
+        if ($mediaCatalogImage) {
             $builder->setImageFromMediaCatalog($mediaCatalogImage, $imageAlt);
+        }
 
         //if a $build callback is provided, call it with the new BitBuilder instance
-        if ($build)
+        if ($build) {
             $build($builder);
+        }
 
         return $this;
     }
@@ -109,8 +114,9 @@ class SectionBuilder extends SiteComponentBuilder
     public function updateBit(Bit|string $bit, callable $update): static
     {
         $bitInstance = is_string($bit) ? $this->siteComponent->bits()->where('uid', $bit)->first() : $bit;
-        if ($bitInstance)
+        if ($bitInstance) {
             $update(BitBuilder::from($bitInstance));
+        }
 
         return $this;
     }
@@ -118,17 +124,19 @@ class SectionBuilder extends SiteComponentBuilder
     public function deleteBit(Bit|string $bit): static
     {
         $bitInstance = is_string($bit) ? $this->siteComponent->bits()->where('uid', $bit)->first() : $bit;
-        if ($bitInstance)
+        if ($bitInstance) {
             $bitInstance->delete();
+        }
 
         return $this;
     }
 
-    public function deleteBits(string|null $type = null): static
+    public function deleteBits(?string $type = null): static
     {
         $bits = $type ? $this->siteComponent->bits()->where('type', $type)->get() : $this->siteComponent->bits;
-        foreach ($bits as $bit)
+        foreach ($bits as $bit) {
             $bit->delete();
+        }
 
         return $this;
     }

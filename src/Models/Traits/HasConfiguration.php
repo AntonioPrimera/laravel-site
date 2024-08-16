@@ -1,4 +1,5 @@
 <?php
+
 namespace AntonioPrimera\Site\Models\Traits;
 
 use Illuminate\Database\Eloquent\Casts\AsCollection;
@@ -9,7 +10,6 @@ use Illuminate\Support\Collection;
  */
 trait HasConfiguration
 {
-
     protected function initializeHasConfiguration(): void
     {
         //add the 'config' attribute to the casts array
@@ -27,8 +27,9 @@ trait HasConfiguration
     public function config(string|array $key, mixed $default = null): mixed
     {
         //if the value is null, return the value from the config attribute
-        if (is_string($key))
+        if (is_string($key)) {
             return $this->getConfig($key, $default);
+        }
 
         //if the value is an array, merge the array with the config attribute
         $this->config->merge($key);
@@ -45,8 +46,9 @@ trait HasConfiguration
     public function setConfig(string $key, mixed $value, bool $save = true): static
     {
         $this->config->put($key, $value);
-        if ($save)
+        if ($save) {
             $this->save();
+        }
 
         return $this;
     }

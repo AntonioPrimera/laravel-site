@@ -1,14 +1,12 @@
 <?php
+
 namespace AntonioPrimera\Site\Database\ModelBuilders;
 
-use AntonioPrimera\Site\Models\Bit;
 use AntonioPrimera\Site\Models\SiteComponent;
 
 abstract class SiteComponentBuilder
 {
-    public function __construct(protected SiteComponent $siteComponent)
-    {
-    }
+    public function __construct(protected SiteComponent $siteComponent) {}
 
     public function modelInstance(): SiteComponent
     {
@@ -18,6 +16,7 @@ abstract class SiteComponentBuilder
     public function save(): static
     {
         $this->siteComponent->save();
+
         return $this;
     }
 
@@ -32,6 +31,7 @@ abstract class SiteComponentBuilder
     public function setConfig(array|string $key, mixed $value = null): static
     {
         $this->siteComponent->config($key, $value);
+
         return $this;
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace AntonioPrimera\Site\Models;
 
 use AntonioPrimera\Site\Models\Traits\HasConfiguration;

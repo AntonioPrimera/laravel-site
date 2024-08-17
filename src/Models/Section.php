@@ -1,4 +1,5 @@
 <?php
+
 namespace AntonioPrimera\Site\Models;
 
 use AntonioPrimera\Site\Models\Traits\HasSingleImage;
@@ -10,10 +11,8 @@ use Spatie\MediaLibrary\HasMedia;
  * Properties
  *
  * @property int $id
- *
  * @property string $name
  * @property string $uid
- *
  * @property string|null $title
  * @property string|null $contents
  *

@@ -4,7 +4,7 @@
      }"
 >
     <div class="nav-header">
-        <div class="nav-header-inner">
+        <div class="nav-header-inner">gi
             {{-- Logo (mobile & desktop) --}}
             <div class="flex">
                 <a class="flex flex-shrink-0 items-center" href="/">
@@ -25,7 +25,7 @@
 
             {{-- Desktop menu --}}
             <div class="nav-header-menu">
-                @foreach($menuItems as $menuItem)
+                @foreach($items as $menuItem)
                     <a href="{{ $menuItem['url'] }}" class="nav-header-menu-item {{ $menuItem['active'] ? 'active-menu-item' : 'default-menu-item' }}" aria-current="page">{{ $menuItem['label'] }}</a>
                 @endforeach
             </div>
@@ -73,7 +73,7 @@
             {{ $mobileMenu }}
         @else
             <div class="mobile-menu-container">
-                @foreach($menuItems as $menuItem)
+                @foreach($items as $menuItem)
                     <a href="{{ $menuItem['url'] }}" class="mobile-menu-item {{ $menuItem['active'] ? 'active-menu-item' : 'default-menu-item' }}" aria-current="page">{{ $menuItem['label'] }}</a>
                 @endforeach
             </div>

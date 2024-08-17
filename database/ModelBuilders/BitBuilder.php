@@ -92,4 +92,10 @@ class BitBuilder extends SiteComponentBuilder
         $this->siteComponent->contents = $contents;
         return $this;
     }
+
+    public function setPosition(int $position): static
+    {
+        $this->siteComponent->position = $position;
+        return $this;
+    }
 }

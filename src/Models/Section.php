@@ -24,6 +24,8 @@ class Section extends SiteComponent implements HasMedia
 {
     use HasSingleImage;
 
+    protected $guarded = [];
+
     public function bits(): HasMany
     {
         return $this->hasMany(Bit::class);

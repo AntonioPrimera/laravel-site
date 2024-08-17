@@ -48,6 +48,13 @@ class SectionBuilder extends SiteComponentBuilder
         return new static($sectionInstance);
     }
 
+    //--- Static API --------------------------------------------------------------------------------------------------
+
+    public static function deleteSection(Section|string $section): void
+    {
+        static::from($section)->delete();
+    }
+
     //--- Set Section Data --------------------------------------------------------------------------------------------
 
     public function setName(string $name): static
@@ -71,9 +78,9 @@ class SectionBuilder extends SiteComponentBuilder
     //--- Section Bits ------------------------------------------------------------------------------------------------
 
     public function createBit(
-        string $uid,
-        string $type,
-        string $name,
+        string|null $uid = null,
+        string|null $type = null,
+        string|null $name = null,
         string|null $icon = null,
         string|null $title = null,
         string|null $contents = null,
@@ -131,5 +138,14 @@ class SectionBuilder extends SiteComponentBuilder
             $bit->delete();
 
         return $this;
+    }
+
+    public function delete(): void
+    {
+        //delete all bits
+        $this->deleteBits();
+
+        //delete the section
+        $this->siteComponent->delete();
     }
 }

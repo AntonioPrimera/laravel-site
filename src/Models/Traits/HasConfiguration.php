@@ -24,30 +24,36 @@ trait HasConfiguration
      * If the first parameter is a string, the method will return the value of the configuration key.
      * If the first parameter is an array, the method will merge the array with the existing config array.
      */
-    public function config(string|array $key, mixed $default = null): mixed
+    public function config(string|array $key, mixed $default = null, bool $save = true): mixed
     {
         //if the value is null, return the value from the config attribute
         if (is_string($key))
             return $this->getConfig($key, $default);
 
         //if the value is an array, merge the array with the config attribute
-        $this->config->merge($key);
-        $this->save();
+        $this->config = $this->getConfigInstance()->merge($key);
+        if ($save)
+            $this->save();
 
         return $this;
     }
 
     public function getConfig(string $key, mixed $default = null): mixed
     {
-        return $this->config->get($key, $default);
+        return $this->getConfigInstance()->get($key, $default);
     }
 
     public function setConfig(string $key, mixed $value, bool $save = true): static
     {
-        $this->config->put($key, $value);
+        $this->getConfigInstance()->put($key, $value);
         if ($save)
             $this->save();
 
         return $this;
+    }
+
+    protected function getConfigInstance(): Collection
+    {
+        return $this->config ??= new Collection();
     }
 }

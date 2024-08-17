@@ -5,6 +5,7 @@ namespace AntonioPrimera\Site\Tests;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
 use AntonioPrimera\Site\SiteServiceProvider;
+use Spatie\MediaLibrary\MediaLibraryServiceProvider;
 
 class TestCase extends Orchestra
 {
@@ -20,6 +21,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app)
     {
         return [
+            MediaLibraryServiceProvider::class,
             SiteServiceProvider::class,
         ];
     }
@@ -28,9 +30,17 @@ class TestCase extends Orchestra
     {
         config()->set('database.default', 'testing');
 
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_laravel-site_table.php.stub';
-        $migration->up();
-        */
+        //run the media library migration
+        $mediaMigration = include __DIR__ . '/../vendor/spatie/laravel-medialibrary/database/migrations/create_media_table.php.stub';
+        $mediaMigration->up();
+
+        //run the package migrations
+        foreach (['create_sections_table', 'create_bits_table'] as $migrationName) {
+            $migration = include __DIR__."/../database/migrations/{$migrationName}.php.stub";
+            $migration->up();
+        }
+
+        //$migration = include __DIR__.'/../database/migrations/create_laravel-site_table.php.stub';
+        //$migration->up();
     }
 }

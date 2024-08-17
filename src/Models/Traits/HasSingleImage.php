@@ -16,15 +16,15 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
  */
 trait HasSingleImage
 {
-    use InteractsWithMedia;
+    use InteractsWithMedia, HasCustomTranslations;
 
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('image')
-            ->withResponsiveImages()
             ->singleFile()
             ->registerMediaConversions(function () {
-                $this->addMediaConversion('large')
+                $this->addMediaConversion('optimized')
+                    ->withResponsiveImages()
                     ->format('webp')
                     ->fit(
                         Fit::Max,
@@ -71,26 +71,36 @@ trait HasSingleImage
     /**
      * Set the image for this model
      */
-    public function setImage(string $path, string $alt = ''): static
+    public function setImage(string $path, string|array $alt = []): static
     {
         $this->addMedia($path)->withCustomProperties(['alt' => $alt])->toMediaCollection('image');
         return $this;
     }
 
     /**
-     * Get the alternative text for the image
+     * Get the alternative text for the image, for the given locale
+     * - if no locale is provided, the current locale is used
      */
-    public function getImageAlt(): string
+    public function getImageAlt(string|null $locale = null): string
     {
-        return $this->image?->getCustomProperty('alt', '') ?? '';
+        return $this->getTranslation($this->rawAlt(), $locale);
     }
 
     /**
-     * Set the alternative text for the image
+     * Set the alternative text for the image (as a string or as an array of translations)
      */
-    public function setImageAlt(string $alt): static
+    public function setImageAlt(string|array $alt): static
     {
         $this->image?->setCustomProperty('alt', $alt)->save();
+        return $this;
+    }
+
+    /**
+     * Set the alternative text for the image, for the given locale
+     */
+    public function setImageAltTranslation(string $locale, string $value): static
+    {
+        $this->setImageAlt($this->setTranslation($this->rawAlt(), $locale, $value));
         return $this;
     }
 
@@ -112,7 +122,7 @@ trait HasSingleImage
     /**
      * Get the full path to a file in the media catalog
      *
-     * |!|: Make sure to create & set the correct disk in the config file
+     * [!]: Make sure to create & set the correct disk in the config file
      */
     protected function mediaCatalog(string $fileName): string
     {
@@ -120,9 +130,11 @@ trait HasSingleImage
         return Storage::disk($mediaCatalogDisk)->path($fileName);
     }
 
-    protected function altText(string|array $alt): string
+    /**
+     * Get the raw alternative texts for the image (as an array or as a string)
+     */
+    protected function rawAlt(): string|array
     {
-        //todo: add support for translations
-        $baseArray = is_array($alt) ? $alt : [];
+        return $this->image?->getCustomProperty('alt', []) ?? [];
     }
 }

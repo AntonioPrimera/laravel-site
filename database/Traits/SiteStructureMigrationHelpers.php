@@ -28,9 +28,9 @@ trait SiteStructureMigrationHelpers
 
     public function createBit(
         Section $section,
-        string|null $uid,
-        string|null $type,
-        string|null $name,
+        string|null $uid = null,
+        string|null $type = null,
+        string|null $name = null,
         string|null $title = null,
         string|null $contents = null,
         string|null $icon = null,
@@ -55,15 +55,6 @@ trait SiteStructureMigrationHelpers
 
     public function deleteSection(string|Section $section): void
     {
-        $sectionInstance = is_string($section) ? Section::where('uid', $section)->first() : $section;
-        if (!$section)
-            return;
-
-        //delete all bits one by one, so that the bit model events are triggered and the media is deleted
-        foreach ($sectionInstance->bits as $bit)
-            $bit->delete();
-
-        //delete the section
-        $section->delete();
+        SectionBuilder::deleteSection($section);
     }
 }

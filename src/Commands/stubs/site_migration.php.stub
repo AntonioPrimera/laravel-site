@@ -1,0 +1,19 @@
+<?php
+use AntonioPrimera\Site\Database\DataMigration;
+use AntonioPrimera\Site\Database\ModelBuilders\SectionBuilder;
+use AntonioPrimera\Site\Database\ModelBuilders\BitBuilder;
+
+return new class extends DataMigration {
+
+    public function up(): void
+    {
+        //create / update / delete sections and bits here
+        //manage the media associated with the models
+        //create / update / delete any other models that are relevant to the site
+    }
+
+    public function down(): void
+    {
+        //revert the changes made in the up method
+    }
+};

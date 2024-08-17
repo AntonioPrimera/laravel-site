@@ -1,0 +1,16 @@
+<?php
+use AntonioPrimera\Site\Database\DataMigration;
+
+return new class extends DataMigration {
+
+    public function up(): void
+    {
+        $this->createSection('home:hero', 'Home Hero', 'Home Page', 'This is the best package ever!')
+            ->createBit('cta', 'cta', 'Contact us', 'icon-contact-us', 'Contact us now!', 'Arrange a meeting with us', 5);
+    }
+
+    public function down(): void
+    {
+        $this->deleteSection('home:hero');
+    }
+};

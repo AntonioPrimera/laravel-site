@@ -38,7 +38,10 @@
         "psr-4": {
             "AntonioPrimera\\Site\\": "src/",
             "AntonioPrimera\\Site\\Database\\": "database/"
-        }
+        },
+        "files": [
+            "src/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

@@ -27,6 +27,8 @@ class Bit extends SiteComponent implements HasMedia
 {
     use HasSingleImage;
 
+    protected $guarded = [];
+
     public function section(): BelongsTo
     {
         return $this->belongsTo(Section::class);

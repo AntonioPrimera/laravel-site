@@ -21,6 +21,7 @@ class SiteServiceProvider extends PackageServiceProvider
             ->hasCommands([
                 MakeSiteMigration::class,
             ]);
+
     }
 
     public function packageBooted(): void

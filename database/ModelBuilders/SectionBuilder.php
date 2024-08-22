@@ -57,19 +57,19 @@ class SectionBuilder extends SiteComponentBuilder
 
     //--- Set Section Data --------------------------------------------------------------------------------------------
 
-    public function setName(string $name): static
+    public function withName(string $name): static
     {
         $this->siteComponent->name = $name;
         return $this;
     }
 
-    public function setTitle(string $title): static
+    public function withTitle(string $title): static
     {
         $this->siteComponent->title = $title;
         return $this;
     }
 
-    public function setContents(string $contents): static
+    public function withContents(string $contents): static
     {
         $this->siteComponent->contents = $contents;
         return $this;
@@ -78,7 +78,7 @@ class SectionBuilder extends SiteComponentBuilder
     //--- Section Bits ------------------------------------------------------------------------------------------------
 
     public function createBit(
-        string|null $uid = null,
+        string|callable|null $uid = null,
         string|null $type = null,
         string|null $name = null,
         string|null $icon = null,
@@ -91,6 +91,13 @@ class SectionBuilder extends SiteComponentBuilder
         callable|null $build = null
     ): static
     {
+
+        //if the first argument is a callable, it's the $build callback
+        if (is_callable($uid)) {
+            $build = $uid;
+            $uid = null;
+        }
+
         $builder = BitBuilder::create(
             section: $this->siteComponent,
             uid: $uid,
@@ -104,7 +111,7 @@ class SectionBuilder extends SiteComponentBuilder
         );
 
         if ($mediaCatalogImage)
-            $builder->setImageFromMediaCatalog($mediaCatalogImage, $imageAlt);
+            $builder->withImageFromMediaCatalog($mediaCatalogImage, $imageAlt);
 
         //if a $build callback is provided, call it with the new BitBuilder instance
         if ($build)

@@ -86,7 +86,7 @@ trait HasSingleImage
      */
     public function getImageAlt(string|null $locale = null): string
     {
-        return $this->getTranslation($this->rawAlt(), $locale);
+        return $this->getCustomTranslation($this->rawAlt(), $locale);
     }
 
     /**
@@ -104,7 +104,7 @@ trait HasSingleImage
      */
     public function setImageAltTranslation(string $locale, string $value): static
     {
-        $this->setImageAlt($this->setTranslation($this->rawAlt(), $locale, $value));
+        $this->setImageAlt($this->setCustomTranslation($this->rawAlt(), $locale, $value));
         return $this;
     }
 

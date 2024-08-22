@@ -10,7 +10,7 @@ trait HasCustomTranslations
      * - if the translations are a string and $forceArray is true [currentLocale() => $translations] is returned
      * - if the translations are a string and $forceArray is false, $translations is returned
      */
-    protected function getTranslations(string|array $translations, bool $forceArray = false): array|string
+    protected function getCustomTranslations(string|array $translations, bool $forceArray = false): array|string
     {
         //if the translations are already an array, return them as is (we don't check if the array is valid)
         if (is_array($translations))
@@ -24,9 +24,9 @@ trait HasCustomTranslations
      * - if the translations are a string, the string is returned
      * - if the translations are an array, the requested locale is returned if it exists, otherwise the fallback locale is returned
      */
-    protected function getTranslation(string|array $translations, string|null $locale = null): string
+    protected function getCustomTranslation(string|array $translations, string|null $locale = null): string
     {
-        $translations = $this->getTranslations($translations);
+        $translations = $this->getCustomTranslations($translations);
         $requestedLocale = $locale ?? currentLocale();
 
         return is_string($translations)
@@ -39,9 +39,9 @@ trait HasCustomTranslations
      * - if the translations are a string, [currentLocale() => $translations, $locale => $value] is returned
      * - if the translations are an array, the requested locale is set to the value
      */
-    protected function setTranslation(string|array $translations, string $locale, string $value): array
+    protected function setCustomTranslation(string|array $translations, string $locale, string $value): array
     {
-        $translationsArray = $this->getTranslations($translations, true);
+        $translationsArray = $this->getCustomTranslations($translations, true);
         $translationsArray[$locale] = $value;
 
         return $translationsArray;

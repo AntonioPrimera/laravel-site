@@ -1,6 +1,5 @@
 <?php
 
-// config for AntonioPrimera/Site
 return [
     /**
      * The list of locales that should be used for translations

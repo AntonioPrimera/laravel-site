@@ -35,9 +35,9 @@ it('can create a basic section with only an uid and a name', function () {
 it('can use a fluent interface to set section data', function () {
     expect(section('test:section'))->toBeNull();
     SectionBuilder::create('test:section', 'Test section')
-        ->setName('Updated section name')
-        ->setTitle('Test section title')
-        ->setContents('Test section contents')
+        ->withName('Updated section name')
+        ->withTitle('Test section title')
+        ->withContents('Test section contents')
         ->setConfig(['key' => 'value'])
         ->save();
 
@@ -74,13 +74,13 @@ it('can create a bit and fluently add data to it using the build callback', func
     SectionBuilder::from('test:section')
         ->createBit(
             build: function (BitBuilder $builder) {
-                $builder->setUid('test-bit')
-                    ->setType('test-type')
-                    ->setName('Test bit')
-                    ->setIcon('Test bit icon')
-                    ->setTitle('Test bit title')
-                    ->setContents('Test bit contents')
-                    ->setPosition(5)
+                $builder->withUid('test-bit')
+                    ->withType('test-type')
+                    ->withName('Test bit')
+                    ->withIcon('Test bit icon')
+                    ->withTitle('Test bit title')
+                    ->withContents('Test bit contents')
+                    ->withPosition(5)
                     ->setConfig(['key' => 'value'])
                     ->save();
             });
@@ -101,9 +101,9 @@ it('can update an existing section using the SectionBuilder', function () {
     expect(section('test:section')->name)->toBe('Test section');
 
     SectionBuilder::from('test:section')
-        ->setName('Updated section name')
-        ->setTitle('Test section title')
-        ->setContents('Test section contents')
+        ->withName('Updated section name')
+        ->withTitle('Test section title')
+        ->withContents('Test section contents')
         ->setConfig(['key' => 'value'])
         ->save();
 
@@ -125,8 +125,8 @@ it('can update a bit using the SectionBuilder', function () {
 
     SectionBuilder::from('test:section')
         ->updateBit('test-bit', function (BitBuilder $builder) {
-            $builder->setName('Updated bit name')
-                ->setType('Updated bit type')
+            $builder->withName('Updated bit name')
+                ->withType('Updated bit type')
                 ->save();
         });
 
@@ -143,11 +143,11 @@ it('can update a section bit directly using the BitBuilder', function () {
     expect($bit->name)->toBe('Test bit');
 
     BitBuilder::from($bit)
-        ->setName('Updated bit name')
-        ->setIcon('Updated bit icon')
-        ->setTitle('Updated bit title')
-        ->setContents('Updated bit contents')
-        ->setPosition(10)
+        ->withName('Updated bit name')
+        ->withIcon('Updated bit icon')
+        ->withTitle('Updated bit title')
+        ->withContents('Updated bit contents')
+        ->withPosition(10)
         ->setConfig(['key' => 'updated value'])
         ->save();
 

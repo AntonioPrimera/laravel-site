@@ -57,49 +57,49 @@ class BitBuilder extends SiteComponentBuilder
 
     //--- Set Bit Data --------------------------------------------------------------------------------------------
 
-    public function setUid(string $uid): static
+    public function withUid(string $uid): static
     {
         $this->siteComponent->uid = $uid;
 
         return $this;
     }
 
-    public function setType(string $type): static
+    public function withType(string $type): static
     {
         $this->siteComponent->type = $type;
 
         return $this;
     }
 
-    public function setName(string $name): static
+    public function withName(string $name): static
     {
         $this->siteComponent->name = $name;
 
         return $this;
     }
 
-    public function setIcon(string $icon): static
+    public function withIcon(string $icon): static
     {
         $this->siteComponent->icon = $icon;
 
         return $this;
     }
 
-    public function setTitle(string $title): static
+    public function withTitle(string $title): static
     {
         $this->siteComponent->title = $title;
 
         return $this;
     }
 
-    public function setContents(string $contents): static
+    public function withContents(string $contents): static
     {
         $this->siteComponent->contents = $contents;
 
         return $this;
     }
 
-    public function setPosition(int $position): static
+    public function withPosition(int $position): static
     {
         $this->siteComponent->position = $position;
         return $this;

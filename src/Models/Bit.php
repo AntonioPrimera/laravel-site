@@ -5,6 +5,7 @@ namespace AntonioPrimera\Site\Models;
 use AntonioPrimera\Site\Models\Traits\HasSingleImage;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\HasMedia;
+use Spatie\Translatable\HasTranslations;
 
 /**
  * Properties
@@ -24,9 +25,10 @@ use Spatie\MediaLibrary\HasMedia;
  */
 class Bit extends SiteComponent implements HasMedia
 {
-    use HasSingleImage;
+    use HasSingleImage, HasTranslations;
 
     protected $guarded = [];
+    protected array $translatable = ['title', 'contents'];
 
     public function section(): BelongsTo
     {

@@ -4,7 +4,7 @@ namespace AntonioPrimera\Site\Database\ModelBuilders\Traits;
 
 trait HandleSiteComponentSingleImage
 {
-    public function setImageFromMediaCatalog(string $imageRelativePath, string|array $alt): static
+    public function withImageFromMediaCatalog(string $imageRelativePath, string|array $alt): static
     {
         $this->siteComponent->setImageFromMediaCatalog($imageRelativePath, $alt);
 

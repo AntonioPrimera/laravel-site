@@ -7,14 +7,13 @@ use Illuminate\Support\Collection;
 
 abstract class SectionComponent extends SiteComponent
 {
-	//override this if a section will always have the same uid,
-    //so you don't have to pass it in the constructor
-	protected string|null $section = null;
+    //set the default section uid for this component if the section is
+    //always the same, so you don't have to pass it in the constructor
+    public string|null $defaultSection = null;
 
-	//the section instance holding the data for this component
-	protected Section|null $sectionInstance;
+	public Section $section;
 
-	//the title, contents and icon of the section
+	//the title and contents of the section
 	public string|null $title;
 	public string|null $contents;
 
@@ -25,8 +24,9 @@ abstract class SectionComponent extends SiteComponent
     {
 		parent::__construct($config);
 
-		$this->sectionInstance = $this->determineSectionInstance($section);
-		$this->fillPropertiesWithSectionData($this->sectionInstance);
+        //determine the section instance from the provided section or the default section
+        $this->section = $this->determineSectionInstance($section ?: $this->defaultSection);
+		$this->fillPropertiesWithSectionData($this->section);
     }
 
 	public function bit(string $uid): Bit|null
@@ -41,13 +41,11 @@ abstract class SectionComponent extends SiteComponent
 
 	//--- Protected helpers -------------------------------------------------------------------------------------------
 
-	protected function determineSectionInstance(string|Section|null $section): Section
+	protected function determineSectionInstance(string|Section $section): Section
 	{
-		if ($section instanceof Section)
-			return $section;
-
-		$sectionUid = $section ?: $this->section;
-		return Section::whereUid($sectionUid)->with('bits')->firstOrFail();
+		return $section instanceof Section
+            ? $section
+            : Section::where('uid', $section)->with('bits')->firstOrFail();
 	}
 
 	protected function fillPropertiesWithSectionData(Section $section): void

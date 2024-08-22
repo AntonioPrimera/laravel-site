@@ -1,21 +1,24 @@
 <?php
 
+use AntonioPrimera\Site\Facades\Site;
 use AntonioPrimera\Site\Models\Bit;
 use AntonioPrimera\Site\Models\Section;
 
+//--- Site facade locale helpers --------------------------------------------------------------------------------------
+
 function currentLocale(): string
 {
-    return app()->getLocale();
+    return Site::currentLocale();
 }
 
 function defaultLocale(): string
 {
-    return config('app.locale');
+    return Site::defaultLocale();
 }
 
 function fallbackLocale(): string
 {
-    return config('app.fallback_locale');
+    return Site::fallbackLocale();
 }
 
 /**
@@ -25,15 +28,17 @@ function fallbackLocale(): string
  */
 function allLocales(): array
 {
-    return config('site.translations.locales', array_unique([defaultLocale(), fallbackLocale(), currentLocale()]));
+    return Site::allLocales();
 }
+
+//--- Site facade sections & bits helpers -----------------------------------------------------------------------------
 
 /**
  * Get a section by its uid (section uids are unique)
  */
 function section(string $uid): Section|null
 {
-    return Section::where('uid', $uid)->first();
+    return Site::getSection($uid);
 }
 
 /**
@@ -42,6 +47,5 @@ function section(string $uid): Section|null
  */
 function bit(string $uid): Bit|null
 {
-    $uid = explode('.', $uid, 2);
-    return section($uid[0])?->bits()->where('uid', $uid[1])->first();
+    return Site::getBit($uid);
 }

@@ -17,7 +17,6 @@ class SiteServiceProvider extends PackageServiceProvider
             ->name('laravel-site')
             ->hasConfigFile()
             ->hasMigrations(['create_sections_table', 'create_bits_table'])
-            ->runsMigrations()
             ->hasCommands([
                 MakeSiteMigration::class,
             ]);

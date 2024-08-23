@@ -36,16 +36,16 @@ function allLocales(): array
 /**
  * Get a section by its uid (section uids are unique)
  */
-function section(string $uid): Section|null
+function section(Section|string $section): Section|null
 {
-    return Site::getSection($uid);
+    return is_string($section) ? Site::getSection($section) : $section;
 }
 
 /**
  * Try to get a bit by its 'section-uid.bit-uid' string
  * (bit uids are nullable and not necessarily unique)
  */
-function bit(string $uid): Bit|null
+function bit(Bit|string $bit): Bit|null
 {
-    return Site::getBit($uid);
+    return is_string($bit) ? Site::getBit($bit) : $bit;
 }

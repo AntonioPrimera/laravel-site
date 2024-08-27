@@ -1,16 +1,19 @@
 <?php
 namespace AntonioPrimera\Site\Database\ModelBuilders;
 
-use AntonioPrimera\Site\Database\ModelBuilders\Traits\HandleSiteComponentSingleImage;
+use AntonioPrimera\Site\Database\ModelBuilders\Traits\BuildsPosition;
+use AntonioPrimera\Site\Database\ModelBuilders\Traits\BuildsSingleImage;
+use AntonioPrimera\Site\Database\ModelBuilders\Traits\BuildsTranslatableTextContents;
 use AntonioPrimera\Site\Models\Bit;
+use AntonioPrimera\Site\Models\Page;
 use AntonioPrimera\Site\Models\Section;
 
 /**
- * @property Section $siteComponent
+ * @property Section $model
  */
 class SectionBuilder extends SiteComponentBuilder
 {
-    use HandleSiteComponentSingleImage;
+    use BuildsSingleImage, BuildsPosition, BuildsTranslatableTextContents;
 
     final public function __construct(Section $section)
     {
@@ -20,32 +23,40 @@ class SectionBuilder extends SiteComponentBuilder
     //--- Factories ---------------------------------------------------------------------------------------------------
 
     public static function create(
+        Page|string $page,
         string $uid,
-        string $name,
-        string|null $title = null,
-        string|null $contents = null,
-        array|null $config = null
+        string|null $name = null,
+        string|array|null $title = null,
+        string|array|null $short = null,
+        string|array|null $contents = null,
+        int $position = 0,
+        array|null $data = null,
+        string|null $imageFromMediaCatalog = null,
+        string $imageAlt = '',
     ): static
     {
-        $section = Section::create([
-            'uid' => $uid,
-            'name' => $name,
-            'title' => $title,
-            'contents' => $contents,
-            'config' => $config,
-        ]);
+        //create the model with the minimum required data
+        $section = page($page)->sections()->create(['uid' => $uid]);
 
-        return new static($section);
+        //add the rest of the data to the model, using the fluent interface
+        $builder = (new static($section))
+            ->massAssignFluently(
+                compact('name', 'title', 'short', 'contents', 'position', 'data')
+            )
+            ->save();
+
+        if ($imageFromMediaCatalog)
+            $builder->withImageFromMediaCatalog($imageFromMediaCatalog, $imageAlt);
+
+        return $builder;
     }
 
     /**
-     * Create a new SectionBuilder instance from an existing
-     * section instance or an existing section uid
+     * Create a new SectionBuilder for an existing section
      */
     public static function from(Section|string $section): static
     {
-        $sectionInstance = is_string($section) ? Section::where('uid', $section)->firstOrFail() : $section;
-        return new static($sectionInstance);
+        return new static(section($section));
     }
 
     //--- Static API --------------------------------------------------------------------------------------------------
@@ -55,94 +66,61 @@ class SectionBuilder extends SiteComponentBuilder
         static::from($section)->delete();
     }
 
-    //--- Set Section Data --------------------------------------------------------------------------------------------
-
-    public function withName(string $name): static
-    {
-        $this->siteComponent->name = $name;
-        return $this;
-    }
-
-    public function withTitle(string $title): static
-    {
-        $this->siteComponent->title = $title;
-        return $this;
-    }
-
-    public function withContents(string $contents): static
-    {
-        $this->siteComponent->contents = $contents;
-        return $this;
-    }
-
     //--- Section Bits ------------------------------------------------------------------------------------------------
 
     public function createBit(
-        string|callable|null $uid = null,
-        string|null $type = null,
+        string $uid,
         string|null $name = null,
-        string|null $icon = null,
-        string|null $title = null,
-        string|null $contents = null,
+        string|null $type = null,
+        string|array|null $title = null,
+        string|array|null $short = null,
+        string|array|null $contents = null,
         int $position = 0,
-        array|null $config = null,
-        string|null $mediaCatalogImage = null,
+        array|null $data = null,
+        string|null $imageFromMediaCatalog = null,
         string $imageAlt = '',
         callable|null $build = null
     ): static
     {
 
-        //if the first argument is a callable, it's the $build callback
-        if (is_callable($uid)) {
-            $build = $uid;
-            $uid = null;
-        }
-
         $builder = BitBuilder::create(
-            section: $this->siteComponent,
+            section: $this->model,
             uid: $uid,
-            type: $type,
             name: $name,
-            icon: $icon,
+            type: $type,
             title: $title,
+            short: $short,
             contents: $contents,
             position: $position,
-            config: $config
+            data: $data,
+            imageFromMediaCatalog: $imageFromMediaCatalog,
+            imageAlt: $imageAlt
         );
-
-        if ($mediaCatalogImage)
-            $builder->withImageFromMediaCatalog($mediaCatalogImage, $imageAlt);
 
         //if a $build callback is provided, call it with the new BitBuilder instance
         if ($build)
-            $build($builder);
+            $this->updateBit($builder, $build);
 
         return $this;
     }
 
-    public function updateBit(Bit|string $bit, callable $update): static
+    public function updateBit(BitBuilder|Bit|string $bit, callable $build): static
     {
-        $bitInstance = is_string($bit) ? $this->siteComponent->bits()->where('uid', $bit)->first() : $bit;
-        if ($bitInstance)
-            $update(BitBuilder::from($bitInstance));
-
+        $build($this->bitBuilder($bit));
         return $this;
     }
 
     public function deleteBit(Bit|string $bit): static
     {
-        $bitInstance = is_string($bit) ? $this->siteComponent->bits()->where('uid', $bit)->first() : $bit;
-        if ($bitInstance)
-            $bitInstance->delete();
-
+        $this->bitBuilder($bit)->delete();
         return $this;
     }
 
     public function deleteBits(string|null $type = null): static
     {
-        $bits = $type ? $this->siteComponent->bits()->where('type', $type)->get() : $this->siteComponent->bits;
+        $bits = $type ? $this->model->bits()->where('type', $type)->get() : $this->model->bits;
         foreach ($bits as $bit)
-            $bit->delete();
+            $this->deleteBit($bit);
 
         return $this;
     }
@@ -153,6 +131,13 @@ class SectionBuilder extends SiteComponentBuilder
         $this->deleteBits();
 
         //delete the section
-        $this->siteComponent->delete();
+        $this->model->delete();
+    }
+
+    //--- Protected helpers -------------------------------------------------------------------------------------------
+
+    protected function bitBuilder(BitBuilder|Bit|string $bitOrBuilder): BitBuilder
+    {
+        return $bitOrBuilder instanceof BitBuilder ? $bitOrBuilder : BitBuilder::from($bitOrBuilder);
     }
 }

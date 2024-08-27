@@ -2,19 +2,19 @@
 
 namespace AntonioPrimera\Site\Database\ModelBuilders\Traits;
 
-trait HandleSiteComponentSingleImage
+trait BuildsSingleImage
 {
     public function withImageFromMediaCatalog(string $imageRelativePath, string|array $alt): static
     {
-        $this->siteComponent->setImageFromMediaCatalog($imageRelativePath, $alt);
+        $this->model->setImageFromMediaCatalog($imageRelativePath, $alt);
 
         return $this;
     }
 
     public function deleteSectionImage(): static
     {
-        if ($this->siteComponent->image) {
-            $this->siteComponent->deleteMedia($this->siteComponent->image);
+        if ($this->model->image) {
+            $this->model->deleteMedia($this->model->image);
         }
 
         return $this;

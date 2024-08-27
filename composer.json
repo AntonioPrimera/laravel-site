@@ -58,7 +58,7 @@
                 "AntonioPrimera\\Site\\SiteServiceProvider"
             ],
             "aliases": {
-                "Site": "AntonioPrimera\\Site\\Facades\\Site"
+                "SiteManager": "AntonioPrimera\\Site\\Facades\\SiteManager"
             }
         }
     },

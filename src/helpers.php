@@ -1,24 +1,27 @@
 <?php
 
-use AntonioPrimera\Site\Facades\Site;
+use AntonioPrimera\Site\Facades\SiteManager;
 use AntonioPrimera\Site\Models\Bit;
+use AntonioPrimera\Site\Models\Page;
 use AntonioPrimera\Site\Models\Section;
+use AntonioPrimera\Site\Models\Site;
+use Illuminate\Support\Collection;
 
 //--- Site facade locale helpers --------------------------------------------------------------------------------------
 
 function currentLocale(): string
 {
-    return Site::currentLocale();
+    return SiteManager::currentLocale();
 }
 
 function defaultLocale(): string
 {
-    return Site::defaultLocale();
+    return SiteManager::defaultLocale();
 }
 
 function fallbackLocale(): string
 {
-    return Site::fallbackLocale();
+    return SiteManager::fallbackLocale();
 }
 
 /**
@@ -28,24 +31,53 @@ function fallbackLocale(): string
  */
 function allLocales(): array
 {
-    return Site::allLocales();
+    return SiteManager::allLocales();
 }
 
-//--- Site facade sections & bits helpers -----------------------------------------------------------------------------
-
-/**
- * Get a section by its uid (section uids are unique)
- */
-function section(Section|string $section): Section|null
+function locale(string|null $locale): string
 {
-    return is_string($section) ? Site::getSection($section) : $section;
+    if (!$locale)
+        return currentLocale();
+
+    if (!in_array($locale, allLocales()))
+        throw new \Exception("Locale '$locale' is not supported by the site");
+
+    return $locale;
 }
 
-/**
- * Try to get a bit by its 'section-uid.bit-uid' string
- * (bit uids are nullable and not necessarily unique)
- */
-function bit(Bit|string $bit): Bit|null
+//--- SiteManager component getters -----------------------------------------------------------------------------------
+
+function site(Site|string|null $site = null): Site
 {
-    return is_string($bit) ? Site::getBit($bit) : $bit;
+    return SiteManager::site($site);
+}
+
+function page(Page|string $page): Page
+{
+    return SiteManager::page($page);
+}
+
+function section(Section|string $section): Section
+{
+    return SiteManager::section($section);
+}
+
+function bit(Bit|string $bit): Bit
+{
+    return SiteManager::bit($bit);
+}
+
+function pages(Site|string|null $site = null): Collection
+{
+    return SiteManager::sitePages($site);
+}
+
+function sections(Page|string $page): Collection
+{
+    return SiteManager::pageSections($page);
+}
+
+function bits(Section|string $section): Collection
+{
+    return SiteManager::sectionBits($section);
 }

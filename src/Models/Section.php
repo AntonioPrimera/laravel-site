@@ -1,34 +1,35 @@
 <?php
-
 namespace AntonioPrimera\Site\Models;
 
+use AntonioPrimera\Site\Models\Traits\HasPosition;
 use AntonioPrimera\Site\Models\Traits\HasSingleImage;
+use AntonioPrimera\Site\Models\Traits\HasTextContents;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\MediaLibrary\HasMedia;
-use Spatie\Translatable\HasTranslations;
 
 /**
  * Properties
- *
- * @property int $id
- * @property string $name
- * @property string $uid
- * @property string|null $title
- * @property string|null $contents
+ * @property int $page_id
  *
  * Relations
  * @property Bit[]|EloquentCollection $bits
+ * @property Page $page
  */
 class Section extends SiteComponent implements HasMedia
 {
-    use HasSingleImage, HasTranslations;
+    use HasTextContents, HasSingleImage, HasPosition;
 
-    protected $guarded = [];
-    protected array $translatable = ['title', 'contents'];
+    //--- Relations ---------------------------------------------------------------------------------------------------
 
     public function bits(): HasMany
     {
         return $this->hasMany(Bit::class);
+    }
+
+    public function page(): BelongsTo
+    {
+        return $this->belongsTo(Page::class);
     }
 }

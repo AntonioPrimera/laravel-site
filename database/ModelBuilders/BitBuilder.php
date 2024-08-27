@@ -2,16 +2,19 @@
 
 namespace AntonioPrimera\Site\Database\ModelBuilders;
 
-use AntonioPrimera\Site\Database\ModelBuilders\Traits\HandleSiteComponentSingleImage;
+use AntonioPrimera\Site\Database\ModelBuilders\Traits\BuildsPosition;
+use AntonioPrimera\Site\Database\ModelBuilders\Traits\BuildsSingleImage;
+use AntonioPrimera\Site\Database\ModelBuilders\Traits\BuildsTranslatableTextContents;
 use AntonioPrimera\Site\Models\Bit;
 use AntonioPrimera\Site\Models\Section;
+use Illuminate\Support\Str;
 
 /**
- * @property Bit $siteComponent
+ * @property Bit $model
  */
 class BitBuilder extends SiteComponentBuilder
 {
-    use HandleSiteComponentSingleImage;
+    use BuildsSingleImage, BuildsPosition, BuildsTranslatableTextContents;
 
     final public function __construct(Bit $bit)
     {
@@ -22,86 +25,46 @@ class BitBuilder extends SiteComponentBuilder
 
     public static function create(
         Section|string $section,
-        ?string $uid,
-        ?string $type,
-        ?string $name,
-        ?string $icon = null,
-        ?string $title = null,
-        ?string $contents = null,
+        string $uid,
+        string|null $name = null,
+        string|null $type = null,
+        string|array|null $title = null,
+        string|array|null $short = null,
+        string|array|null $contents = null,
         int $position = 0,
-        ?array $config = null
+        array|null $data = null,
+        string|null $imageFromMediaCatalog = null,
+        string $imageAlt = '',
     ): static {
-        $sectionInstance = is_string($section) ? Section::where('uid', $section)->firstOrFail() : $section;
+        //create the model with the minimum required data
+        $bit = section($section)->bits()->create(['uid' => $uid]);
 
-        $bit = $sectionInstance->bits()->create([
-            'uid' => $uid,
-            'type' => $type,
-            'name' => $name,
-            'icon' => $icon,
-            'title' => $title,
-            'contents' => $contents,
-            'position' => $position,
-            'config' => $config,
-        ]);
+        //add the rest of the data to the model, using the fluent interface
+        $builder = (new static($bit))
+            ->massAssignFluently(
+                compact('name', 'type', 'title', 'short', 'contents', 'position', 'data')
+            )
+            ->save();
 
-        return new static($bit);
+        if ($imageFromMediaCatalog)
+            $builder->withImageFromMediaCatalog($imageFromMediaCatalog, $imageAlt);
+
+        return $builder;
     }
 
     /**
      * Create a new BitBuilder instance from an existing bit instance
      */
-    public static function from(Bit $bit): static
+    public static function from(Bit|string $bit): static
     {
-        return new static($bit);
+        return new static(bit($bit));
     }
 
     //--- Set Bit Data --------------------------------------------------------------------------------------------
 
-    public function withUid(string $uid): static
-    {
-        $this->siteComponent->uid = $uid;
-
-        return $this;
-    }
-
     public function withType(string $type): static
     {
-        $this->siteComponent->type = $type;
-
-        return $this;
-    }
-
-    public function withName(string $name): static
-    {
-        $this->siteComponent->name = $name;
-
-        return $this;
-    }
-
-    public function withIcon(string $icon): static
-    {
-        $this->siteComponent->icon = $icon;
-
-        return $this;
-    }
-
-    public function withTitle(string $title): static
-    {
-        $this->siteComponent->title = $title;
-
-        return $this;
-    }
-
-    public function withContents(string $contents): static
-    {
-        $this->siteComponent->contents = $contents;
-
-        return $this;
-    }
-
-    public function withPosition(int $position): static
-    {
-        $this->siteComponent->position = $position;
+        $this->model->type = $type;
         return $this;
     }
 }

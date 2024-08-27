@@ -1,31 +1,26 @@
 <?php
 
+use AntonioPrimera\Site\Database\Traits\MigratesSiteComponent;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    use MigratesSiteComponent;
+
     public function up(): void
     {
         Schema::create('sections', function (Blueprint $table) {
-            $table->id();
+            //parent page
+            $table->foreignId('page_id')->constrained('pages')->cascadeOnDelete();
 
-            //section identity
-            $table->string('name');
-            $table->string('uid')->unique();
+            //add basic site component fields
+            $this->addSiteComponentFields($table);			//id, uid, name, data, timestamps
+			$this->addTranslatableContentFields($table);	//title, short, contents
 
-            //section contents
-            $table->string('title')->nullable();
-            $table->text('contents')->nullable();
-
-            //section configuration
-            $table->json('config')->nullable();
-
-            $table->timestamps();
+            //sections can be sorted by their position
+            $this->addPosition($table);
         });
     }
 

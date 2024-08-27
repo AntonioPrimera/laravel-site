@@ -38,7 +38,7 @@ it('can use a fluent interface to set section data', function () {
         ->withName('Updated section name')
         ->withTitle('Test section title')
         ->withContents('Test section contents')
-        ->setConfig(['key' => 'value'])
+        ->withData(['key' => 'value'])
         ->save();
 
     $section = section('test:section');
@@ -81,7 +81,7 @@ it('can create a bit and fluently add data to it using the build callback', func
                     ->withTitle('Test bit title')
                     ->withContents('Test bit contents')
                     ->withPosition(5)
-                    ->setConfig(['key' => 'value'])
+                    ->setData(['key' => 'value'])
                     ->save();
             });
 
@@ -104,7 +104,7 @@ it('can update an existing section using the SectionBuilder', function () {
         ->withName('Updated section name')
         ->withTitle('Test section title')
         ->withContents('Test section contents')
-        ->setConfig(['key' => 'value'])
+        ->withData(['key' => 'value'])
         ->save();
 
     $section = section('test:section');
@@ -148,7 +148,7 @@ it('can update a section bit directly using the BitBuilder', function () {
         ->withTitle('Updated bit title')
         ->withContents('Updated bit contents')
         ->withPosition(10)
-        ->setConfig(['key' => 'updated value'])
+        ->setData(['key' => 'updated value'])
         ->save();
 
     $bit = bit('test:section.test-bit');

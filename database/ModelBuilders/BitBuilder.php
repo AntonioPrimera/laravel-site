@@ -85,6 +85,11 @@ class BitBuilder extends SiteComponentBuilder
         return new static(bit($bit));
     }
 
+    public static function deleteBit(Bit|string $bit): void
+    {
+        static::from($bit)->delete();
+    }
+
     //--- Fluent building interface -----------------------------------------------------------------------------------
 
     public function withType(string $type): static

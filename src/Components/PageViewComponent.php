@@ -35,7 +35,7 @@ abstract class PageViewComponent extends BaseSiteViewComponent
      * Return the page instance for this component
      * This method is just syntactic sugar for 'determineModelInstance(...)'
      */
-    protected abstract function page(string|Page|null $pageOrUid): Page;
+    protected abstract function page(mixed $pageOrUid): Page;
 
     /**
      * Get a section of this page by its uid

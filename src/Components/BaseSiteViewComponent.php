@@ -16,7 +16,7 @@ abstract class BaseSiteViewComponent extends Component
     protected array $dynamicAttributes = [];        //model dynamic attributes (from the data container) exposed to the view
     protected array $modelAttributes = [];          //model attributes exposed to the view
 
-    public function __construct(SiteComponent|string $component, array $config = [])
+    public function __construct(mixed $component, array $config = [])
     {
 		$this->setInitialConfig($config);
         $this->model = $this->determineModelInstance($component);

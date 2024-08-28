@@ -31,6 +31,12 @@ return [
         'path' => 'site-migrations',
     ],
 
+    'model-builders' => [
+        //whether the model builders should automatically save the model after each fluent method call
+        //e.g. calling $builder->withName('test') will automatically save the model if this is set to true
+        'fluent-auto-save' => true,
+    ],
+
     /**
      * Media catalog configuration
      */
@@ -41,9 +47,30 @@ return [
 
     'views' => [
         //the root path for the blade views of the site components (relative to the resources/views directory)
-        'bladeRootName' => 'components.site',
+        'bladeRootName' => 'components',
 
         //the namespace of the site components
-        'componentNamespace' => 'App\\View\\Components\\Site\\',
+        'componentNamespace' => 'App\\View\\Components\\',
+    ],
+
+    //settings for the generator commands: site:page, site:section, site:bit
+    'generator-command' => [
+        'pages' => [
+            'rootNamespace' => 'App\\View\\Components\\Pages',
+            'classTargetFolder' => 'View/Components/Pages',         //relative to the project root
+            'bladeTargetFolder' => 'components/pages',              //relative to the resources/views directory
+        ],
+
+        'sections' => [
+            'rootNamespace' => 'App\\View\\Components\\Sections',
+            'classTargetFolder' => 'View/Components/Sections',
+            'bladeTargetFolder' => 'components/sections',
+        ],
+
+        'bits' => [
+            'rootNamespace' => 'App\\View\\Components\\Bits',
+            'classTargetFolder' => 'View/Components/Bits',
+            'bladeTargetFolder' => 'components/bits',
+        ],
     ]
 ];

@@ -1,0 +1,15 @@
+<div>
+	{{-- Implement your logic here --}}
+	{{-- Available properties: string|null $type, string|null $title, string|null $short, string|null $contents, Bit $bit --}}
+
+    {{-- Sample implementation, using the "antonioprimera/md-parser" to parse the markdown contents --}}
+	<h3 class="">{{ $title }}</h3>
+	<h4 class="">{{ $short }}</h4>
+
+	<div class="flex gap-x-16">
+	    <x-site-image :bit="$bit" class="w-full h-auto" />
+	    <div class="flex-1">
+		    {!! \AntonioPrimera\Md\Facades\Md::parse($contents) !!}
+        </div>
+	</div>
+</div>

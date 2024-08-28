@@ -18,7 +18,7 @@ class TestCase extends Orchestra
         );
     }
 
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
         return [
             MediaLibraryServiceProvider::class,
@@ -26,7 +26,7 @@ class TestCase extends Orchestra
         ];
     }
 
-    public function getEnvironmentSetUp($app)
+    public function getEnvironmentSetUp($app): void
     {
         config()->set('database.default', 'testing');
 
@@ -35,8 +35,8 @@ class TestCase extends Orchestra
         $mediaMigration->up();
 
         //run the package migrations
-        foreach (['create_sections_table', 'create_bits_table'] as $migrationName) {
-            $migration = include __DIR__."/../database/migrations/{$migrationName}.php.stub";
+        foreach (['create_sites_table', 'create_pages_table', 'create_sections_table', 'create_bits_table'] as $migrationName) {
+            $migration = include __DIR__."/../database/migrations/{$migrationName}.php";
             $migration->up();
         }
 

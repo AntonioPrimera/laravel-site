@@ -60,7 +60,7 @@ class BitBuilder extends SiteComponentBuilder
         return new static(bit($bit));
     }
 
-    //--- Set Bit Data --------------------------------------------------------------------------------------------
+    //--- Fluent building interface -----------------------------------------------------------------------------------
 
     public function withType(string $type): static
     {

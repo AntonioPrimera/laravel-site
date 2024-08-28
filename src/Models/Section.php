@@ -32,4 +32,15 @@ class Section extends SiteComponent implements HasMedia
     {
         return $this->belongsTo(Page::class);
     }
+
+    //--- Abstract method implementation ------------------------------------------------------------------------------
+
+    /**
+     * Get the fully qualified UID of the site component
+     * e.g. for a section it would have the structure: 'site-uid/page-uid:section-uid'
+     */
+    public function fullyQualifiedUid(): string
+    {
+        return $this->page->fullyQualifiedUid() . ':' . $this->uid;
+    }
 }

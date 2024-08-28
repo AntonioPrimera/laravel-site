@@ -1,27 +1,27 @@
 <?php
 
-use AntonioPrimera\Site\Facades\SiteManager;
+use AntonioPrimera\Site\Facades\Site as SiteFacade;
 use AntonioPrimera\Site\Models\Bit;
 use AntonioPrimera\Site\Models\Page;
 use AntonioPrimera\Site\Models\Section;
-use AntonioPrimera\Site\Models\Site;
+use AntonioPrimera\Site\Models\Site as SiteModel;
 use Illuminate\Support\Collection;
 
 //--- Site facade locale helpers --------------------------------------------------------------------------------------
 
 function currentLocale(): string
 {
-    return SiteManager::currentLocale();
+    return SiteFacade::currentLocale();
 }
 
 function defaultLocale(): string
 {
-    return SiteManager::defaultLocale();
+    return SiteFacade::defaultLocale();
 }
 
 function fallbackLocale(): string
 {
-    return SiteManager::fallbackLocale();
+    return SiteFacade::fallbackLocale();
 }
 
 /**
@@ -31,7 +31,7 @@ function fallbackLocale(): string
  */
 function allLocales(): array
 {
-    return SiteManager::allLocales();
+    return SiteFacade::allLocales();
 }
 
 function locale(string|null $locale): string
@@ -47,37 +47,37 @@ function locale(string|null $locale): string
 
 //--- SiteManager component getters -----------------------------------------------------------------------------------
 
-function site(Site|string|null $site = null): Site
+function site(SiteModel|string $site = 'default'): SiteModel
 {
-    return SiteManager::site($site);
+    return SiteFacade::site($site);
 }
 
 function page(Page|string $page): Page
 {
-    return SiteManager::page($page);
+    return SiteFacade::page($page);
 }
 
 function section(Section|string $section): Section
 {
-    return SiteManager::section($section);
+    return SiteFacade::section($section);
 }
 
 function bit(Bit|string $bit): Bit
 {
-    return SiteManager::bit($bit);
+    return SiteFacade::bit($bit);
 }
 
-function pages(Site|string|null $site = null): Collection
+function pages(SiteModel|string $site = 'default'): Collection
 {
-    return SiteManager::sitePages($site);
+    return SiteFacade::sitePages($site);
 }
 
 function sections(Page|string $page): Collection
 {
-    return SiteManager::pageSections($page);
+    return SiteFacade::pageSections($page);
 }
 
 function bits(Section|string $section): Collection
 {
-    return SiteManager::sectionBits($section);
+    return SiteFacade::sectionBits($section);
 }

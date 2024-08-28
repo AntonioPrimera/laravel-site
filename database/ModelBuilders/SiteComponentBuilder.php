@@ -2,11 +2,14 @@
 
 namespace AntonioPrimera\Site\Database\ModelBuilders;
 
+use AntonioPrimera\Site\Database\ModelBuilders\Traits\WithAutoSave;
 use AntonioPrimera\Site\Models\SiteComponent;
 use Illuminate\Support\Str;
 
 abstract class SiteComponentBuilder
 {
+    use WithAutoSave;
+
     public function __construct(public SiteComponent $model) {}
 
     public function save(): static
@@ -21,14 +24,14 @@ abstract class SiteComponentBuilder
     public function withUid(string $uid): static
     {
         $this->model->uid = $uid;
-
+        $this->autoSave();
         return $this;
     }
 
     public function withName(string $name): static
     {
         $this->model->name = $name;
-
+        $this->autoSave();
         return $this;
     }
 
@@ -43,6 +46,7 @@ abstract class SiteComponentBuilder
         }
 
         $this->model->setData($key, $value);
+        $this->autoSave();
         return $this;
     }
 

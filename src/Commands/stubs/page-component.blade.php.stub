@@ -1,0 +1,13 @@
+<x-guest-layout>
+	{{-- Implement your logic here --}}
+	{{-- Available properties: string|null $title, string|null $short, string|null $contents, Page $page, Section[] $sections --}}
+	{{-- Available methods: $section(string $uid): Section|null --}}
+
+    {{-- This is a sample implementation, considering you implemented the section components used below --}}
+	<x-section-hero :section="$section('hero')">
+	<x-section-hero-stats :section="section('generic:stats')">
+	<x-section-cta>
+	<x-section-features :section="$section('features')">
+	<x-section-testimonials :section="section('contact:form')">
+	<x-footer>
+</x-guest-layout>

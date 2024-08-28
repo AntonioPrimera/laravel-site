@@ -1,29 +1,17 @@
 <?php
 namespace AntonioPrimera\Site\Commands;
 
-use Illuminate\Console\GeneratorCommand;
-use Illuminate\Support\Str;
+use AntonioPrimera\Artisan\FileGeneratorCommand;
+use AntonioPrimera\Artisan\FileRecipes\MigrationRecipe;
 
-class MakeSiteMigration extends GeneratorCommand
+class MakeSiteMigration extends FileGeneratorCommand
 {
-    protected $name = 'make:site-migration';
-    protected $description = 'Create a new migration for the site package, creating, updating or deleting SiteComponent models (Sections, Bits, etc.)';
+    protected $signature = 'make:site-migration {name}';
+    protected $description = 'Create a new migration for the site package, creating, updating or deleting SiteComponent models (Sites, Pages, Sections, Bits, or any other models)';
 
-    protected $type = 'Migration';
-
-    protected function getStub(): string
+    protected function recipe(): MigrationRecipe
     {
-        return __DIR__ . '/stubs/site_migration.php.stub';
-    }
-
-    protected function qualifyClass($name): string
-    {
-        return $name;
-    }
-
-    protected function getPath($name): string
-    {
-        $snakeCaseName = Str::snake($name);
-        return database_path(config('site.data-migrations.path') . '/' . date('Y_m_d_His') . '_' . $snakeCaseName . '.php');
+        return (new MigrationRecipe(__DIR__ . '/stubs/site_migration.php.stub'))
+            ->withTargetFolder(database_path(config('site.data-migrations.path')));
     }
 }

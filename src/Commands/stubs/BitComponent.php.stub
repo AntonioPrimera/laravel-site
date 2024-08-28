@@ -1,0 +1,31 @@
+<?php
+namespace DUMMY_NAMESPACE;
+
+use AntonioPrimera\Site\Components\BitViewComponent;
+
+/**
+ * Properties available in the blade view only:
+ * @property \AntonioPrimera\Site\Models\Bit $bit
+ * @property string|null $type
+ * @property string|null $title
+ * @property string|null $short
+ * @property string|null $contents
+ */
+class DUMMY_CLASS extends BitViewComponent
+{
+	//TODO: define public properties, corresponding to the attributes in the 'data' array of the bit model
+	//TODO: define any public methods that you want to use in the view here
+
+	public function mount(): void
+	{
+		//TODO: override this method if you want to set any properties when the component is created
+	}
+
+	// Uncomment this method if this component always renders the same bit and return the bit instance.
+	// The $bitOrUid parameter is the 'bit' prop received by the component in the blade view
+	//
+	//protected function bit(Bit|string|null $bitOrUid): Bit
+    //{
+    //    //
+    //}
+}

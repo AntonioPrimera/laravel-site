@@ -26,13 +26,9 @@ class Page extends SiteComponent
     use HasTextContents;
 
     protected array $translatable = ['menu_label'];
-
-    protected static function booted(): void
-    {
-        static::mergeCasts([
-            'menu_visible' => 'boolean',
-        ]);
-    }
+    protected $casts = [
+        'menu_visible' => 'boolean',
+    ];
 
     //--- Relations ---------------------------------------------------------------------------------------------------
 
@@ -44,5 +40,16 @@ class Page extends SiteComponent
     public function site(): BelongsTo
     {
         return $this->belongsTo(Site::class);
+    }
+
+    //--- Abstract methods implementation -----------------------------------------------------------------------------
+
+    /**
+     * Get the fully qualified UID of the site component
+     * e.g. for a page it has the form: 'site-uid/page-uid'
+     */
+    public function fullyQualifiedUid(): string
+    {
+        return $this->site->fullyQualifiedUid() . '/' . $this->uid;
     }
 }

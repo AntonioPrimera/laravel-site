@@ -2,6 +2,7 @@
 namespace AntonioPrimera\Site;
 
 use AntonioPrimera\Site\Exceptions\SiteComponentNotFoundException;
+use AntonioPrimera\Site\Exceptions\SiteException;
 use AntonioPrimera\Site\Models\Bit;
 use AntonioPrimera\Site\Models\Page;
 use AntonioPrimera\Site\Models\Section;
@@ -22,9 +23,9 @@ class SiteManager {
     /**
      * For most projects, there should only be one site, so the uid is optional.
      */
-    public function getSiteByUid(string|null $uid = null): Site
+    public function getSiteByUid(string $uid = 'default'): Site
     {
-        return $uid ? Site::where('uid', $uid)->firstOrFail() : Site::firstOrFail();
+        return Site::where('uid', $uid)->firstOrFail();
     }
 
     public function getPageByUid(string $uid): Page|null
@@ -62,7 +63,7 @@ class SiteManager {
 
     //--- Simplified site component getters ---------------------------------------------------------------------------
 
-    public function site(Site|string|null $site = null): Site
+    public function site(Site|string $site = 'default'): Site
     {
         return $site instanceof Site ? $site : $this->getSiteByUid($site);
     }
@@ -84,7 +85,7 @@ class SiteManager {
 
     //--- Site component children -------------------------------------------------------------------------------------
 
-    public function sitePages(Site|string|null $site = null): Collection
+    public function sitePages(Site|string $site = 'default'): Collection
     {
         return $site ? $this->site($site)->pages : Page::all();
     }
@@ -99,7 +100,7 @@ class SiteManager {
         return $this->section($section)->bits;
     }
 
-    public function sitePage(Site|string|null $site, string $pageUid): Page
+    public function sitePage(Site|string $site, string $pageUid): Page
     {
         $page = $this->site($site)->pages->first(fn (Page $page) => $page->uid === $pageUid);
 
@@ -137,6 +138,14 @@ class SiteManager {
 
     //--- Locale management -------------------------------------------------------------------------------------------
 
+    public function setLocale(string $locale): void
+    {
+        if (!$this->isValidLocale($locale))
+            throw new SiteException("Locale '$locale' is not supported by the site");
+
+        app()->setLocale($locale);
+    }
+
     public function currentLocale(): string
     {
         return app()->getLocale();
@@ -155,5 +164,10 @@ class SiteManager {
     public function allLocales(): array
     {
         return config('site.translations.locales', fn() => array_unique([$this->defaultLocale(), $this->fallbackLocale(), $this->currentLocale()]));
+    }
+
+    public function isValidLocale(string $locale): bool
+    {
+        return in_array($locale, $this->allLocales());
     }
 }

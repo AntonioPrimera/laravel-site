@@ -16,4 +16,9 @@ class Site extends SiteComponent
     {
         return $this->hasMany(Page::class);
     }
+
+    public function fullyQualifiedUid(): string
+    {
+        return $this->uid;
+    }
 }

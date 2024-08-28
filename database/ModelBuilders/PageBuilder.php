@@ -2,10 +2,8 @@
 namespace AntonioPrimera\Site\Database\ModelBuilders;
 
 use AntonioPrimera\Site\Database\ModelBuilders\Traits\BuildsTranslatableTextContents;
-use AntonioPrimera\Site\Models\Bit;
 use AntonioPrimera\Site\Models\Page;
 use AntonioPrimera\Site\Models\Section;
-use AntonioPrimera\Site\Models\Site;
 
 /**
  * @property Page $model
@@ -83,7 +81,7 @@ class PageBuilder extends SiteComponentBuilder
         string|null $imageFromMediaCatalog = null,
         string $imageAlt = '',
         callable|null $build = null
-    ): SectionBuilder
+    ): static
     {
         $builder = SectionBuilder::create(
             page: $this->model,
@@ -102,7 +100,7 @@ class PageBuilder extends SiteComponentBuilder
         if ($build)
             $this->updateSection($builder, $build);
 
-        return $builder;
+        return $this;
     }
 
     public function updateSection(SectionBuilder|Section|string $section, callable $build): static

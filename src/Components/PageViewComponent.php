@@ -1,7 +1,7 @@
 <?php
 namespace AntonioPrimera\Site\Components;
 
-use AntonioPrimera\Site\Facades\SiteManager;
+use AntonioPrimera\Site\Facades\Site;
 use AntonioPrimera\Site\Models\Page;
 use AntonioPrimera\Site\Models\Section;
 use AntonioPrimera\Site\Models\SiteComponent;
@@ -42,7 +42,7 @@ abstract class PageViewComponent extends BaseSiteViewComponent
      */
 	public function section(string $uid): Section|null
 	{
-        return SiteManager::pageSection($this->model, $uid);
+        return Site::pageSection($this->model, $uid);
 	}
 
     //--- Implementation of abstract methods --------------------------------------------------------------------------

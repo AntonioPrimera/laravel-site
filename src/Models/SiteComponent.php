@@ -45,6 +45,12 @@ abstract class SiteComponent extends Model
             ARRAY_FILTER_USE_KEY
         );
 
-        return array_merge(...$translatableLists);
+        return array_merge(...array_values($translatableLists));
     }
+
+    /**
+     * Get the fully qualified UID of the site component
+     * e.g. for a bit it would have the structure: 'site-uid/page-uid:section-uid.bit-uid'
+     */
+    public abstract function fullyQualifiedUid(): string;
 }

@@ -25,4 +25,15 @@ class Bit extends SiteComponent implements HasMedia
     {
         return $this->belongsTo(Section::class);
     }
+
+    //--- Abstract methods implementation -----------------------------------------------------------------------------
+
+    /**
+     * Get the fully qualified UID of the site component
+     * e.g. for a bit it would have the structure: 'site-uid/page-uid:section-uid.bit-uid'
+     */
+    public function fullyQualifiedUid(): string
+    {
+        return $this->section->fullyQualifiedUid() . '.' . $this->uid;
+    }
 }

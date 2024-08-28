@@ -1,0 +1,38 @@
+<?php
+namespace DUMMY_NAMESPACE;
+
+use AntonioPrimera\Site\Components\PageViewComponent;
+
+/**
+ * Available public properties (usable in the blade view):
+ * @property \AntonioPrimera\Site\Models\Page $page
+ * @property string|null $title
+ * @property string|null $short
+ * @property string|null $contents
+ * @property \Illuminate\Support\Collection|null $sections
+ *
+ * Available public methods (usable in the blade view):
+ * @method \AntonioPrimera\Site\Models\Section|null section(string $uid)
+ */
+class DUMMY_CLASS extends PageViewComponent
+{
+	//TODO: define public properties, corresponding to the attributes in the 'data' array of the page model
+	//TODO: define any public methods that you want to use in the view here
+
+	public function mount(): void
+	{
+		//TODO: override this method if you want to set any properties immediately after the component is created
+	}
+
+
+	/**
+     * Implement this method to return the page instance that this component renders. Optionally, you can use the
+     * $pageOrUid parameter provided as the 'page' prop to the component in the blade view, to return a
+     * different page instance based on the prop. This method is required (abstract in the parent).
+     */
+	protected function page(string|Page|null $pageOrUid): Page
+    {
+        //e.g.: return page('about-us');
+        // OR : return page($pageOrUid);
+    }
+}

@@ -51,15 +51,6 @@ abstract class BaseSiteViewComponent extends Component
      */
     protected abstract function determineModelInstance(SiteComponent|string $componentOrUid): SiteComponent;
 
-    /**
-     * Fill the $modelAttributes array with the model attributes that should be exposed to the view
-     */
-    protected function exposeModelAttributes(SiteComponent $model): void
-    {
-        foreach ($this->exposedModelAttributes as $attribute)
-            $this->modelAttributes[$attribute] = $model->$attribute;
-    }
-
     //--- Protected helpers -------------------------------------------------------------------------------------------
 
     /**
@@ -80,6 +71,15 @@ abstract class BaseSiteViewComponent extends Component
     protected function relativeBladeName(string $relativeNamespace): string
     {
         return Str::of($relativeNamespace)->explode('\\')->map(fn ($part) => Str::kebab($part))->implode('.');
+    }
+
+    /**
+     * Fill the $modelAttributes array with the model attributes that should be exposed to the view
+     */
+    protected function exposeModelAttributes(SiteComponent $model): void
+    {
+        foreach ($this->exposedModelAttributes as $attribute)
+            $this->modelAttributes[$attribute] = $model->$attribute;
     }
 
     /**

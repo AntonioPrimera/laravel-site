@@ -1,7 +1,7 @@
 <?php
 namespace AntonioPrimera\Site\Components;
 
-use AntonioPrimera\Site\Facades\SiteManager;
+use AntonioPrimera\Site\Facades\Site;
 use AntonioPrimera\Site\Models\Bit;
 use AntonioPrimera\Site\Models\Section;
 use AntonioPrimera\Site\Models\SiteComponent;
@@ -34,7 +34,7 @@ abstract class SectionViewComponent extends BaseSiteViewComponent
      */
 	public function bit(string $uid): Bit|null
 	{
-        return SiteManager::sectionBit($this->model, $uid);
+        return Site::sectionBit($this->model, $uid);
 	}
 
     public function bitsOfType(string $type): Collection

@@ -39,9 +39,14 @@ class SiteBuilder extends SiteComponentBuilder
         return new static(site($site));
     }
 
+    public static function fromDefaultSite(): static
+    {
+        return static::from('default');
+    }
+
     //--- Static API --------------------------------------------------------------------------------------------------
 
-    public static function deleteSite(Site|string $site): void
+    public static function deleteSite(Site|string $site = 'default'): void
     {
         static::from($site)->delete();
     }

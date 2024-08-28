@@ -17,7 +17,7 @@ class SiteBuilder extends SiteComponentBuilder
     //--- Factories ---------------------------------------------------------------------------------------------------
 
     public static function create(
-        string $uid,
+        string $uid = 'default',
         string|null $name = null,
         array|null $data = null
     ): static

@@ -53,7 +53,7 @@ function cleanupSiteMigrations(): void
 function migrateHomePage(): void
 {
     //generate a migration file
-    Artisan::call('make:site-migration', ['name' => 'DataMigrationCreateHomePage']);
+    Artisan::call('site:migration', ['name' => 'DataMigrationCreateHomePage']);
     expect(migrationExists('data_migration_create_home_page'))->toBeTrue();
 
     //copy some relevant content into the migration file, so that it creates a section and a bit

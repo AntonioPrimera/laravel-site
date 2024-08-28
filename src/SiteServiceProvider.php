@@ -4,7 +4,7 @@ namespace AntonioPrimera\Site;
 use AntonioPrimera\Site\Commands\GenerateBitComponent;
 use AntonioPrimera\Site\Commands\GeneratePageComponent;
 use AntonioPrimera\Site\Commands\GenerateSectionComponent;
-use AntonioPrimera\Site\Commands\MakeSiteMigration;
+use AntonioPrimera\Site\Commands\GenerateSiteMigration;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -21,7 +21,7 @@ class SiteServiceProvider extends PackageServiceProvider
             ->hasConfigFile()
             ->hasMigrations(['create_sites_table', 'create_pages_table', 'create_sections_table', 'create_bits_table'])
             ->hasCommands([
-                MakeSiteMigration::class,
+                GenerateSiteMigration::class,
                 GeneratePageComponent::class,
                 GenerateSectionComponent::class,
                 GenerateBitComponent::class

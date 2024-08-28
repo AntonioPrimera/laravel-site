@@ -11,7 +11,7 @@ it('can create a new site migration', function () {
     expect(config('site.data-migrations.path'))->toBe('site-migrations')
         ->and(migrationExists('DataMigrationCreateHomePage'))->toBeFalse();
 
-    Artisan::call('make:site-migration', ['name' => 'DataMigrationCreateHomePage']);
+    Artisan::call('site:migration', ['name' => 'DataMigrationCreateHomePage']);
 
     expect(migrationExists('data_migration_create_home_page'))->toBeTrue();
 });

@@ -176,7 +176,7 @@ These migration files are stored in the `database/site-migrations` directory and
 together with your standard laravel migrations.
 
 ```bash
-php artisan make:site-migration CreateHomePage
+php artisan site:migration CreateHomePage
 ```
 
 You can use the `SiteBuilder`, `PageBuilder`, `SectionBuilder` and `BitBuilder` classes to create new models in your data

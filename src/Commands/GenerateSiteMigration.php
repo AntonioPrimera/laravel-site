@@ -4,9 +4,9 @@ namespace AntonioPrimera\Site\Commands;
 use AntonioPrimera\Artisan\FileGeneratorCommand;
 use AntonioPrimera\Artisan\FileRecipes\MigrationRecipe;
 
-class MakeSiteMigration extends FileGeneratorCommand
+class GenerateSiteMigration extends FileGeneratorCommand
 {
-    protected $signature = 'make:site-migration {name}';
+    protected $signature = 'site:migration {name}';
     protected $description = 'Create a new migration for the site package, creating, updating or deleting SiteComponent models (Sites, Pages, Sections, Bits, or any other models)';
 
     protected function recipe(): MigrationRecipe

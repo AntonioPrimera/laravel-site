@@ -20,6 +20,12 @@ class SiteSettings
         return $this->site->getData($this->key);
     }
 
+    public function clear(): static
+    {
+        $this->site->setData($this->key, []);
+        return $this->save();
+    }
+
     public function get(string $key, mixed $default = null): mixed
     {
         $path = $this->key ? "$this->key.$key" : $key;

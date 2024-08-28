@@ -73,14 +73,14 @@ composer require antonioprimera/laravel-site
 Publish the migrations and run them:
 
 ```bash
-php artisan vendor:publish --tag="laravel-site-migrations"
+php artisan vendor:publish --tag="site-migrations"
 php artisan migrate
 ```
 
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="laravel-site-config"
+php artisan vendor:publish --tag="site-config"
 ```
 
 This is the contents of the published config file:

@@ -87,7 +87,7 @@ abstract class BaseSiteViewComponent extends Component
      */
     protected function exposeModelUnstructuredData(SiteComponent $model): void
     {
-        $this->dynamicAttributes = array_merge($this->dynamicAttributes, $model->getData());
+        $this->dynamicAttributes = array_merge($this->dynamicAttributes, $model->getData() ?? []);
     }
 
     /**

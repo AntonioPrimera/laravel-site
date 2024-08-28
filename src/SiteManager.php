@@ -7,6 +7,7 @@ use AntonioPrimera\Site\Models\Bit;
 use AntonioPrimera\Site\Models\Page;
 use AntonioPrimera\Site\Models\Section;
 use AntonioPrimera\Site\Models\Site;
+use Closure;
 use Illuminate\Support\Collection;
 
 /**
@@ -15,8 +16,6 @@ use Illuminate\Support\Collection;
  * The uid for the site is optional (if not provided, the first site is used)
  */
 class SiteManager {
-
-    protected array $translatable = ['title', 'short', 'contents'];
 
     //--- Site component getters by UID -------------------------------------------------------------------------------
 
@@ -31,12 +30,10 @@ class SiteManager {
     public function getPageByUid(string $uid): Page|null
     {
         $uidParts = explode('/', $uid, 2);
-        $siteUid = count($uidParts) > 1 ? $uidParts[0] : null;
+        $siteUid = count($uidParts) > 1 ? $uidParts[0] : 'default';
         $pageUid = count($uidParts) > 1 ? $uidParts[1] : $uidParts[0];
 
-        return $siteUid
-            ? $this->getSiteByUid($siteUid)?->pages()->where('uid', $pageUid)->firstOrFail()
-            : Page::where('uid', $uid)->firstOrFail();
+        return $this->getSiteByUid($siteUid)?->pages()->where('uid', $pageUid)->firstOrFail();
     }
 
     public function getSectionByUid(string $uid): Section|null
@@ -45,9 +42,10 @@ class SiteManager {
         $pageUid = count($uid) > 1 ? $uid[0] : null;
         $sectionUid = count($uid) > 1 ? $uid[1] : $uid[0];
 
+        //get the page section if a page uid is provided, otherwise get the site section
         return $pageUid
             ? $this->getPageByUid($pageUid)?->sections()->where('uid', $sectionUid)->firstOrFail()
-            : Section::where('uid', $uid)->firstOrFail();
+            : $this->getSiteByUid()->sections()->where('uid', $sectionUid)->firstOrFail();
     }
 
     public function getBitByUid(string $uid): Bit|null
@@ -56,9 +54,10 @@ class SiteManager {
         $sectionUid = count($uid) > 1 ? $uid[0] : null;
         $bitUid = count($uid) > 1 ? $uid[1] : $uid[0];
 
+        //get the section bit if a section uid is provided, otherwise get the site bit
         return $sectionUid
             ? $this->getSectionByUid($sectionUid)?->bits()->where('uid', $bitUid)->first()
-            : Bit::where('uid', $uid)->first();
+            : $this->getSiteByUid()->bits()->where('uid', $bitUid)->first();
     }
 
     //--- Simplified site component getters ---------------------------------------------------------------------------
@@ -85,22 +84,75 @@ class SiteManager {
 
     //--- Site component children -------------------------------------------------------------------------------------
 
-    public function sitePages(Site|string $site = 'default'): Collection
+    /**
+     * Get the pages belonging directly to a site, optionally filtered by a closure
+     */
+    public function sitePages(Site|string $site = 'default', Closure|null $filter = null): Collection
     {
-        return $site ? $this->site($site)->pages : Page::all();
+        $pages = $this->site($site)->pages;
+        return $filter ? $pages->filter($filter) : $pages;
     }
 
-    public function pageSections(Page|string $page): Collection
+    /**
+     * Get the sections belonging directly to a site (usually generic sections, reusable across multiple pages),
+     * optionally filtered by a closure
+     */
+    public function siteSections(Site|string $site = 'default', Closure|null $filter = null): Collection
     {
-        return $this->page($page)->sections;
+        $sections = $this->site($site)->sections;
+        return $filter ? $sections->filter($filter) : $sections;
     }
 
-    public function sectionBits(Section|string $section): Collection
+    /**
+     * Syntactic sugar for siteSections(), because sections belonging directly
+     * to the site are generic sections, reusable across multiple pages
+     */
+    public function genericSections(Site|string $site = 'default', Closure|null $filter = null): Collection
     {
-        return $this->section($section)->bits;
+        return $this->siteSections($site, $filter);
     }
 
-    public function sitePage(Site|string $site, string $pageUid): Page
+    /**
+     * Get the bits belonging directly to a site (usually generic bits, reusable across multiple sections),
+     * optionally filtered by a closure
+     */
+    public function siteBits(Site|string $site = 'default', Closure|null $filter = null): Collection
+    {
+        $bits = $this->site($site)->bits;
+        return $filter ? $bits->filter($filter) : $bits;
+    }
+
+    /**
+     * Syntactic sugar for siteBits(), because bits belonging directly to
+     * the site are generic bits, reusable across multiple sections
+     */
+    public function genericBits(Site|string $site = 'default', Closure|null $filter = null): Collection
+    {
+        return $this->siteBits($site, $filter);
+    }
+
+    /**
+     * Get the sections belonging to a page, optionally filtered by a closure
+     */
+    public function pageSections(Page|string $page, Closure|null $filter = null): Collection
+    {
+        $sections = $this->page($page)->sections;
+        return $filter ? $sections->filter($filter) : $sections;
+    }
+
+    /**
+     * Get the bits belonging to a section, optionally filtered by a closure
+     */
+    public function sectionBits(Section|string $section, Closure|null $filter = null): Collection
+    {
+        $bits = $this->section($section)->bits;
+        return $filter ? $bits->filter($filter) : $bits;
+    }
+
+    /**
+     * Get a single page belonging directly to a site
+     */
+    public function sitePage(string $pageUid, Site|string $site = 'default'): Page
     {
         $page = $this->site($site)->pages->first(fn (Page $page) => $page->uid === $pageUid);
 
@@ -112,7 +164,58 @@ class SiteManager {
         return $page;
     }
 
-    public function pageSection(Page|string $page, string $sectionUid): Section
+    /**
+     * Get a single section belonging directly to a site (usually a generic section, reusable across multiple pages)
+     */
+    public function siteSection(string $sectionUid, Site|string $site = 'default'): Section
+    {
+        $section = $this->site($site)->sections->first(fn (Section $section) => $section->uid === $sectionUid);
+
+        if (!$section)
+            throw new SiteComponentNotFoundException(
+                "Generic section with uid '$sectionUid' not found in site with uid '$site->uid'"
+            );
+
+        return $section;
+    }
+
+    /**
+     * Syntactic sugar for siteSection(), because sections belonging directly
+     * to the site are generic sections, reusable across multiple pages
+     */
+    public function genericSection(string $sectionUid, Site|string $site = 'default'): Section
+    {
+        return $this->siteSection($sectionUid, $site);
+    }
+
+    /**
+     * Get a single bit belonging directly to a site (usually a generic bit, reusable across multiple sections)
+     */
+    public function siteBit(string $bitUid, Site|string $site = 'default'): Bit
+    {
+        $bit = $this->site($site)->bits->first(fn (Bit $bit) => $bit->uid === $bitUid);
+
+        if (!$bit)
+            throw new SiteComponentNotFoundException(
+                "Generic bit with uid '$bitUid' not found in site with uid '$site->uid'"
+            );
+
+        return $bit;
+    }
+
+    /**
+     * Syntactic sugar for siteBit(), because bits belonging directly to
+     * the site are generic bits, reusable across multiple sections
+     */
+    public function genericBit(string $bitUid, Site|string $site = 'default'): Bit
+    {
+        return $this->siteBit($bitUid, $site);
+    }
+
+    /**
+     * Get a single section belonging to a page
+     */
+    public function pageSection(string $sectionUid, Page|string $page): Section
     {
         $section = $this->page($page)->sections->first(fn (Section $section) => $section->uid === $sectionUid);
 
@@ -124,7 +227,10 @@ class SiteManager {
         return $section;
     }
 
-    public function sectionBit(Section|string $section, string $bitUid): Bit
+    /**
+     * Get a single bit belonging to a section
+     */
+    public function sectionBit(string $bitUid, Section|string $section): Bit
     {
         $bit = $this->section($section)->bits->first(fn (Bit $bit) => $bit->uid === $bitUid);
 

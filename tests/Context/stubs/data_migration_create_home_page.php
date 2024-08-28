@@ -43,6 +43,12 @@ return new class extends DataMigration {
         SectionBuilder::create('home', 'header', position: 1);
 
         PageBuilder::create('about', menuLabel: ['ro' => 'About Us Ro', 'en' => 'About Us En'], menuVisible: true, menuPosition: 2);
+
+        //create a generic section
+        SectionBuilder::createGenericSection('footer', 'Site Footer', title: ['ro' => 'Site Footer Ro', 'en' => 'Site Footer En']);
+
+        //create a generic bit
+        BitBuilder::createGenericBit(uid: 'cta', name: 'Call to Action', type:'generic-cta', title: ['ro' => 'Contact us Ro', 'en' => 'Contact us']);
     }
 
     public function down(): void

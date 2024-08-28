@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('bits', function (Blueprint $table) {
             //parent section
-            $table->foreignId('section_id')->constrained('sections')->cascadeOnDelete();
+            $table->foreignId('section_id')->nullable()->constrained('sections')->cascadeOnDelete();
+
+            //parent site (if the bit is a top-level / generic bit used in multiple sections)
+            $table->foreignId('site_id')->nullable()->constrained('sites')->cascadeOnDelete();
 
             //add basic site component fields
             $this->addSiteComponentFields($table);                  //id, uid, name, data, timestamps

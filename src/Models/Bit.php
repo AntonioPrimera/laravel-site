@@ -21,9 +21,20 @@ class Bit extends SiteComponent implements HasMedia
 
     //--- Relations ---------------------------------------------------------------------------------------------------
 
+    /**
+     * By default, a bit belongs to a section
+     */
     public function section(): BelongsTo
     {
-        return $this->belongsTo(Section::class);
+        return $this->belongsTo(Section::class, 'section_id');
+    }
+
+    /**
+     * Generic bits, used in multiple sections, can belong directly to a site, instead of a section
+     */
+    public function site(): BelongsTo
+    {
+        return $this->belongsTo(Site::class, 'site_id');
     }
 
     //--- Abstract methods implementation -----------------------------------------------------------------------------

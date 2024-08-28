@@ -42,7 +42,7 @@ abstract class PageViewComponent extends BaseSiteViewComponent
      */
 	public function section(string $uid): Section|null
 	{
-        return Site::pageSection($this->model, $uid);
+        return Site::pageSection($uid, $this->model);
 	}
 
     //--- Implementation of abstract methods --------------------------------------------------------------------------

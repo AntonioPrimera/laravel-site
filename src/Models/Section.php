@@ -23,14 +23,28 @@ class Section extends SiteComponent implements HasMedia
 
     //--- Relations ---------------------------------------------------------------------------------------------------
 
+    /**
+     * A section can have multiple bits
+     */
     public function bits(): HasMany
     {
         return $this->hasMany(Bit::class);
     }
 
+    /**
+     * By default, a section belongs to a page
+     */
     public function page(): BelongsTo
     {
-        return $this->belongsTo(Page::class);
+        return $this->belongsTo(Page::class, 'page_id');
+    }
+
+    /**
+     * Generic sections, used in multiple pages, can belong directly to a site, instead of a page
+     */
+    public function site(): BelongsTo
+    {
+        return $this->belongsTo(Site::class, 'site_id');
     }
 
     //--- Abstract method implementation ------------------------------------------------------------------------------

@@ -134,4 +134,16 @@ it('runs migrations from the data-migrations folder when running artisan migrate
         ->and($heroSection->title)->toBe('Home Hero Title')
         ->and($heroSection->short)->toBe('Home Hero Short')
         ->and($heroSection->contents)->toBe('Home Hero Contents');
+
+    //test the generic section and generic bit
+    $footerSection = section('footer');
+    $ctaBit = bit('cta');
+
+    Site::setLocale('ro');
+    expect($footerSection->name)->toBe('Site Footer')
+        ->and($footerSection->title)->toBe('Site Footer Ro')
+
+        ->and($ctaBit->type)->toBe('generic-cta')
+        ->and($ctaBit->name)->toBe('Call to Action')
+        ->and($ctaBit->title)->toBe('Contact us Ro');
 });

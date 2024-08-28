@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('sections', function (Blueprint $table) {
             //parent page
-            $table->foreignId('page_id')->constrained('pages')->cascadeOnDelete();
+            $table->foreignId('page_id')->nullable()->constrained('pages')->cascadeOnDelete();
+
+            //parent site (if the section is a top-level / generic section used in multiple pages)
+            $table->foreignId('site_id')->nullable()->constrained('sites')->cascadeOnDelete();
 
             //add basic site component fields
             $this->addSiteComponentFields($table);			//id, uid, name, data, timestamps

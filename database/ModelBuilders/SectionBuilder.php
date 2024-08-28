@@ -7,6 +7,7 @@ use AntonioPrimera\Site\Database\ModelBuilders\Traits\BuildsTranslatableTextCont
 use AntonioPrimera\Site\Models\Bit;
 use AntonioPrimera\Site\Models\Page;
 use AntonioPrimera\Site\Models\Section;
+use AntonioPrimera\Site\Models\Site;
 
 /**
  * @property Section $model
@@ -22,6 +23,9 @@ class SectionBuilder extends SiteComponentBuilder
 
     //--- Factories ---------------------------------------------------------------------------------------------------
 
+    /**
+     * Create a new Section for a Page and return its SectionBuilder
+     */
     public static function create(
         Page|string $page,
         string $uid,
@@ -35,20 +39,46 @@ class SectionBuilder extends SiteComponentBuilder
         string $imageAlt = '',
     ): static
     {
-        //create the model with the minimum required data
-        $section = page($page)->sections()->create(['uid' => $uid]);
+        return static::buildSection(
+            page($page)->sections()->create(['uid' => $uid]),
+            $name,
+            $title,
+            $short,
+            $contents,
+            $position,
+            $data,
+            $imageFromMediaCatalog,
+            $imageAlt
+        );
+    }
 
-        //add the rest of the data to the model, using the fluent interface
-        $builder = (new static($section))
-            ->massAssignFluently(
-                compact('name', 'title', 'short', 'contents', 'position', 'data')
-            )
-            ->save();
-
-        if ($imageFromMediaCatalog)
-            $builder->withImageFromMediaCatalog($imageFromMediaCatalog, $imageAlt);
-
-        return $builder;
+    /**
+     * Create a new Section for the site and return its SectionBuilder
+     */
+    public static function createGenericSection(
+        string $uid,
+        string|null $name = null,
+        string|array|null $title = null,
+        string|array|null $short = null,
+        string|array|null $contents = null,
+        int $position = 0,
+        array|null $data = null,
+        string|null $imageFromMediaCatalog = null,
+        string $imageAlt = '',
+        Site|string $site = 'default'
+    ): static
+    {
+        return static::buildSection(
+            site($site)->sections()->create(['uid' => $uid]),
+            $name,
+            $title,
+            $short,
+            $contents,
+            $position,
+            $data,
+            $imageFromMediaCatalog,
+            $imageAlt
+        );
     }
 
     /**
@@ -99,14 +129,8 @@ class SectionBuilder extends SiteComponentBuilder
 
         //if a $build callback is provided, call it with the new BitBuilder instance
         if ($build)
-            $this->updateBit($builder, $build);
+            call_user_func($build, $builder);
 
-        return $this;
-    }
-
-    public function updateBit(BitBuilder|Bit|string $bit, callable $build): static
-    {
-        $build($this->bitBuilder($bit));
         return $this;
     }
 
@@ -139,5 +163,30 @@ class SectionBuilder extends SiteComponentBuilder
     protected function bitBuilder(BitBuilder|Bit|string $bitOrBuilder): BitBuilder
     {
         return $bitOrBuilder instanceof BitBuilder ? $bitOrBuilder : BitBuilder::from($bitOrBuilder);
+    }
+
+    protected static function buildSection(
+        Section $section,
+        string|null $name = null,
+        string|array|null $title = null,
+        string|array|null $short = null,
+        string|array|null $contents = null,
+        int $position = 0,
+        array|null $data = null,
+        string|null $imageFromMediaCatalog = null,
+        string $imageAlt = '',
+    ): static
+    {
+        //add the rest of the data to the model, using the fluent interface
+        $builder = (new static($section))
+            ->massAssignFluently(
+                compact('name', 'title', 'short', 'contents', 'position', 'data')
+            )
+            ->save();
+
+        if ($imageFromMediaCatalog)
+            $builder->withImageFromMediaCatalog($imageFromMediaCatalog, $imageAlt);
+
+        return $builder;
     }
 }

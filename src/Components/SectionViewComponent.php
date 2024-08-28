@@ -34,7 +34,7 @@ abstract class SectionViewComponent extends BaseSiteViewComponent
      */
 	public function bit(string $uid): Bit|null
 	{
-        return Site::sectionBit($this->model, $uid);
+        return Site::sectionBit($uid, $this->model);
 	}
 
     public function bitsOfType(string $type): Collection

@@ -1,5 +1,4 @@
 <?php
-
 namespace AntonioPrimera\Site\Database\ModelBuilders;
 
 use AntonioPrimera\Site\Database\ModelBuilders\Traits\BuildsPosition;
@@ -7,7 +6,7 @@ use AntonioPrimera\Site\Database\ModelBuilders\Traits\BuildsSingleImage;
 use AntonioPrimera\Site\Database\ModelBuilders\Traits\BuildsTranslatableTextContents;
 use AntonioPrimera\Site\Models\Bit;
 use AntonioPrimera\Site\Models\Section;
-use Illuminate\Support\Str;
+use AntonioPrimera\Site\Models\Site;
 
 /**
  * @property Bit $model
@@ -36,20 +35,46 @@ class BitBuilder extends SiteComponentBuilder
         string|null $imageFromMediaCatalog = null,
         string $imageAlt = '',
     ): static {
-        //create the model with the minimum required data
-        $bit = section($section)->bits()->create(['uid' => $uid]);
+        return static::buildBit(
+            section($section)->bits()->create(['uid' => $uid]),
+            $name,
+            $type,
+            $title,
+            $short,
+            $contents,
+            $position,
+            $data,
+            $imageFromMediaCatalog,
+            $imageAlt
+        );
+    }
 
-        //add the rest of the data to the model, using the fluent interface
-        $builder = (new static($bit))
-            ->massAssignFluently(
-                compact('name', 'type', 'title', 'short', 'contents', 'position', 'data')
-            )
-            ->save();
-
-        if ($imageFromMediaCatalog)
-            $builder->withImageFromMediaCatalog($imageFromMediaCatalog, $imageAlt);
-
-        return $builder;
+    public static function createGenericBit(
+        string $uid,
+        string|null $name = null,
+        string|null $type = null,
+        string|array|null $title = null,
+        string|array|null $short = null,
+        string|array|null $contents = null,
+        int $position = 0,
+        array|null $data = null,
+        string|null $imageFromMediaCatalog = null,
+        string $imageAlt = '',
+        Site|string $site = 'default'
+    ): static
+    {
+        return static::buildBit(
+            site($site)->bits()->create(['uid' => $uid]),
+            $name,
+            $type,
+            $title,
+            $short,
+            $contents,
+            $position,
+            $data,
+            $imageFromMediaCatalog,
+            $imageAlt
+        );
     }
 
     /**
@@ -66,5 +91,32 @@ class BitBuilder extends SiteComponentBuilder
     {
         $this->model->type = $type;
         return $this;
+    }
+
+    //--- Protected helpers -------------------------------------------------------------------------------------------
+
+    protected static function buildBit(
+        Bit $bit,
+        string|null $name = null,
+        string|null $type = null,
+        string|array|null $title = null,
+        string|array|null $short = null,
+        string|array|null $contents = null,
+        int $position = 0,
+        array|null $data = null,
+        string|null $imageFromMediaCatalog = null,
+        string $imageAlt = '',
+    ): static
+    {
+        $builder = (new static($bit))
+            ->massAssignFluently(
+                compact('name', 'type', 'title', 'short', 'contents', 'position', 'data')
+            )
+            ->save();
+
+        if ($imageFromMediaCatalog)
+            $builder->withImageFromMediaCatalog($imageFromMediaCatalog, $imageAlt);
+
+        return $builder;
     }
 }

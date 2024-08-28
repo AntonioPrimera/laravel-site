@@ -36,7 +36,7 @@ it('can get a page by its uid', function () {
         ->and(Site::page('welcome'))->toBeInstanceOf(\AntonioPrimera\Site\Models\Page::class)
         ->and(Site::page('welcome')->name)->toBe('Welcome page')
         ->and(Site::page($pageBuilder->model)->name)->toBe('Welcome page')
-        ->and(Site::sitePage('default', 'welcome')->name)->toBe('Welcome page');
+        ->and(Site::sitePage('welcome')->name)->toBe('Welcome page');
 });
 
 it('will throw an exception if the page uid is not found', function () {
@@ -54,7 +54,7 @@ it('can get a section by its uid', function () {
         ->and(Site::getSectionByUid('welcome:hero-section')->name)->toBe('Hero section')
         ->and(Site::section('default/welcome:hero-section')->name)->toBe('Hero section')
         ->and(Site::section('welcome:hero-section')->name)->toBe('Hero section')
-        ->and(Site::pageSection('default/welcome', 'hero-section')->name)->toBe('Hero section');
+        ->and(Site::pageSection('hero-section', 'default/welcome')->name)->toBe('Hero section');
 });
 
 it('will throw an exception if the section uid is not found', function () {
@@ -64,7 +64,7 @@ it('will throw an exception if the section uid is not found', function () {
 
 it('can get a bit by its uid', function () {
     SiteBuilder::create('default', 'Default site');
-    $pageBuilder = PageBuilder::create('welcome', 'Welcome page')
+    PageBuilder::create('welcome', 'Welcome page')
         ->createSection('hero-section', 'Hero section', build: function (SectionBuilder $builder) {
             $builder->createBit('cta', 'CTA bit');
         });
@@ -74,5 +74,5 @@ it('can get a bit by its uid', function () {
         ->and(Site::getBitByUid('welcome:hero-section.cta')->name)->toBe('CTA bit')
         ->and(Site::bit('default/welcome:hero-section.cta')->name)->toBe('CTA bit')
         ->and(Site::bit('welcome:hero-section.cta')->name)->toBe('CTA bit')
-        ->and(Site::sectionBit('welcome:hero-section', 'cta')->name)->toBe('CTA bit');
+        ->and(Site::sectionBit('cta', 'welcome:hero-section')->name)->toBe('CTA bit');
 });

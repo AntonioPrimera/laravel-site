@@ -5,6 +5,7 @@ use AntonioPrimera\Site\Commands\GenerateBitComponent;
 use AntonioPrimera\Site\Commands\GeneratePageComponent;
 use AntonioPrimera\Site\Commands\GenerateSectionComponent;
 use AntonioPrimera\Site\Commands\GenerateSiteMigration;
+use AntonioPrimera\Site\Commands\GenerateSiteSettings;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -24,7 +25,8 @@ class SiteServiceProvider extends PackageServiceProvider
                 GenerateSiteMigration::class,
                 GeneratePageComponent::class,
                 GenerateSectionComponent::class,
-                GenerateBitComponent::class
+                GenerateBitComponent::class,
+                GenerateSiteSettings::class,
             ]);
 
     }

@@ -72,5 +72,10 @@ return [
             'classTargetFolder' => 'View/Components/Bits',
             'bladeTargetFolder' => 'components/bits',
         ],
+
+        'settings' => [
+            'classTargetFolder' => 'Settings',                      //relative to the project root
+            'rootNamespace' => 'App\\Settings',
+        ],
     ]
 ];

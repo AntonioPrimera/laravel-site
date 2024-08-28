@@ -1,0 +1,9 @@
+<?php
+namespace DUMMY_NAMESPACE;
+
+use AntonioPrimera\Site\Models\SiteSettings as BaseSiteSettings;
+
+class DUMMY_CLASS extends BaseSiteSettings
+{
+    protected string|null $key = 'SETTINGS_KEY';
+}

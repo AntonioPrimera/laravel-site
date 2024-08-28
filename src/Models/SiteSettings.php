@@ -5,13 +5,13 @@ use AntonioPrimera\Site\Exceptions\SiteException;
 
 class SiteSettings
 {
-    protected Site $site;
-    protected string|null $key;
+    protected Site|string $site = 'default';
+    protected string|null $key = null;
 
-    public function __construct(Site|string $site = 'default', string|null $key = null)
+    public function __construct(Site|string|null $site = null, string|null $key = null)
     {
-        $this->site = site($site);
-        $this->key = $key;
+        $this->site = site($site ?? $this->site);   //use the provided site or the default site
+        $this->key = $key ?? $this->key;                 //use the provided key or the default key
         $this->fillPublicPropertiesWithSettings();
     }
 

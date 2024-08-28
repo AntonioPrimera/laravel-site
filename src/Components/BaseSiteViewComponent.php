@@ -49,7 +49,7 @@ abstract class BaseSiteViewComponent extends Component
      * Return the model instance for this component
      * e.g. return section($componentOrUid) for a SectionViewComponent;
      */
-    protected abstract function determineModelInstance(SiteComponent|string $componentOrUid): SiteComponent;
+    protected abstract function determineModelInstance(mixed $componentOrUid): SiteComponent;
 
     //--- Protected helpers -------------------------------------------------------------------------------------------
 

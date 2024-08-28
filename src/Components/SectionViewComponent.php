@@ -23,7 +23,7 @@ abstract class SectionViewComponent extends BaseSiteViewComponent
 	//the bits of the section (additional data containers)
 	public Collection|null $bits;
 
-    public function __construct(string|Section|null $section = null, array $config = [])
+    public function __construct(mixed $section = null, array $config = [])
     {
 		parent::__construct($section, $config);
         $this->bits = $this->model->bits;
@@ -44,7 +44,7 @@ abstract class SectionViewComponent extends BaseSiteViewComponent
 
     //--- Implementation of abstract methods --------------------------------------------------------------------------
 
-    protected function determineModelInstance(SiteComponent|string $componentOrUid): SiteComponent
+    protected function determineModelInstance(mixed $componentOrUid): SiteComponent
     {
         //if a section() method exists in the child class, use it to get the model instance
         //otherwise, use the global section() helper function

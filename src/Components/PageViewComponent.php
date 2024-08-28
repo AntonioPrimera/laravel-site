@@ -25,7 +25,7 @@ abstract class PageViewComponent extends BaseSiteViewComponent
 	//the sections of the page (additional data containers)
 	public Collection|null $sections;
 
-    public function __construct(string|Page|null $page = null, array $config = [])
+    public function __construct(mixed $page = null, array $config = [])
     {
 		parent::__construct($page, $config);
         $this->sections = $this->model->sections;
@@ -47,7 +47,7 @@ abstract class PageViewComponent extends BaseSiteViewComponent
 
     //--- Implementation of abstract methods --------------------------------------------------------------------------
 
-    protected function determineModelInstance(SiteComponent|string $componentOrUid): SiteComponent
+    protected function determineModelInstance(mixed $componentOrUid): SiteComponent
     {
         return $this->page($componentOrUid);
     }

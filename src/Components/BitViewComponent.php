@@ -16,14 +16,14 @@ abstract class BitViewComponent extends BaseSiteViewComponent
 {
     protected array $exposedModelAttributes = [ 'type', 'title', 'short', 'contents' ];
 
-    public function __construct(string|Bit $bit = null, array $config = [])
+    public function __construct(mixed $bit = null, array $config = [])
     {
 		parent::__construct($bit, $config);
     }
 
     //--- Implementation of abstract methods --------------------------------------------------------------------------
 
-    protected function determineModelInstance(SiteComponent|string $componentOrUid): SiteComponent
+    protected function determineModelInstance(mixed $componentOrUid): SiteComponent
     {
         //if a bit() method exists in the child class, use it to get the model instance
         //otherwise, use the global bit() helper function

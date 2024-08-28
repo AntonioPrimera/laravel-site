@@ -6,6 +6,7 @@ use AntonioPrimera\Site\Database\ModelBuilders\SiteBuilder;
 use AntonioPrimera\Site\Facades\Site;
 use AntonioPrimera\Site\Models\Bit;
 use AntonioPrimera\Site\Models\Site as SiteModel;
+use AntonioPrimera\Site\Models\SiteSettings;
 
 it('can get a site by its uid', function () {
     SiteBuilder::create('some-site-uid', 'Test site');
@@ -75,4 +76,24 @@ it('can get a bit by its uid', function () {
         ->and(Site::bit('default/welcome:hero-section.cta')->name)->toBe('CTA bit')
         ->and(Site::bit('welcome:hero-section.cta')->name)->toBe('CTA bit')
         ->and(Site::sectionBit('cta', 'welcome:hero-section')->name)->toBe('CTA bit');
+});
+
+it('can get site settings directly from the site settings data container', function () {
+    SiteBuilder::create(
+        data: [
+            'contact' => [
+                'phone' => '123',
+                'email' => 'test@test.com'
+            ],
+            'someSetting' => 'someValue'
+        ]
+    );
+
+    expect(Site::settings('contact.phone'))->toBe('123')
+        ->and(Site::settings('contact.email'))->toBe('test@test.com')
+        ->and(Site::settings('someSetting'))->toBe('someValue')
+        ->and(SiteSettings::instance()->get('contact.phone'))->toBe('123')
+        ->and(SiteSettings::setting('contact.phone'))->toBe('123')
+        ->and(siteSettings('contact.phone'))->toBe('123')
+        ->and(settings('someSetting'))->toBe('someValue');
 });

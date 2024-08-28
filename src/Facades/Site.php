@@ -37,6 +37,8 @@ use Illuminate\Support\Facades\Facade;
  * @method static Section pageSection(string $sectionUid, Page|string $page)
  * @method static Bit sectionBit(string $bitUid, Section|string $section)
  *
+ * @method static mixed settings(string $key, mixed $default = null)
+ *
  * @method static string currentLocale()
  * @method static string defaultLocale()
  * @method static string fallbackLocale()

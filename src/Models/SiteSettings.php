@@ -8,6 +8,8 @@ class SiteSettings
     protected Site|string $site = 'default';
     protected string|null $key = null;
 
+    //--- Settings construction ---------------------------------------------------------------------------------------
+
     public function __construct(Site|string|null $site = null, string|null $key = null)
     {
         $this->site = site($site ?? $this->site);   //use the provided site or the default site
@@ -15,15 +17,16 @@ class SiteSettings
         $this->fillPublicPropertiesWithSettings();
     }
 
+    public static function instance(): static
+    {
+        return new static();
+    }
+
+    //--- Fetch settings ----------------------------------------------------------------------------------------------
+
     public function all()
     {
         return $this->site->getData($this->key);
-    }
-
-    public function clear(): static
-    {
-        $this->site->setData($this->key, []);
-        return $this->save();
     }
 
     public function get(string $key, mixed $default = null): mixed
@@ -31,6 +34,13 @@ class SiteSettings
         $path = $this->key ? "$this->key.$key" : $key;
         return $this->site->getData($path, $default);
     }
+
+    public static function setting(string $key, mixed $default = null): mixed
+    {
+        return static::instance()->get($key, $default);
+    }
+
+    //--- Manage settings ---------------------------------------------------------------------------------------------
 
     public function set(string $key, mixed $value): static
     {
@@ -44,6 +54,14 @@ class SiteSettings
         $this->site->save();
         return $this;
     }
+
+    public function clear(): static
+    {
+        $this->site->setData($this->key, []);
+        return $this->save();
+    }
+
+    //--- Accessors ---------------------------------------------------------------------------------------------------
 
     public function siteInstance(): Site
     {

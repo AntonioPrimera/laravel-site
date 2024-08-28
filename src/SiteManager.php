@@ -7,6 +7,7 @@ use AntonioPrimera\Site\Models\Bit;
 use AntonioPrimera\Site\Models\Page;
 use AntonioPrimera\Site\Models\Section;
 use AntonioPrimera\Site\Models\Site;
+use AntonioPrimera\Site\Models\SiteSettings;
 use Closure;
 use Illuminate\Support\Collection;
 
@@ -240,6 +241,13 @@ class SiteManager {
             );
 
         return $bit;
+    }
+
+    //--- Site settings -----------------------------------------------------------------------------------------------
+
+    public function settings(string $key, mixed $default = null): mixed
+    {
+        return SiteSettings::setting($key, $default);
     }
 
     //--- Locale management -------------------------------------------------------------------------------------------

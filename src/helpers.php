@@ -81,3 +81,21 @@ function bits(Section|string $section): Collection
 {
     return SiteFacade::sectionBits($section);
 }
+
+//--- Site settings ---------------------------------------------------------------------------------------------------
+
+/**
+ * Shortcut helper to get a site setting value
+ */
+function siteSettings(string $key, mixed $default = null): mixed
+{
+    return SiteFacade::settings($key, $default);
+}
+
+/**
+ * Syntactic sugar for siteSettings()
+ */
+function settings(string $key, mixed $default = null): mixed
+{
+    return siteSettings($key, $default);
+}

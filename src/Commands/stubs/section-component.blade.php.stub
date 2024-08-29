@@ -2,13 +2,4 @@
 	{{-- Implement your logic here --}}
 	{{-- Available properties: string|null $title, string|null $short, string|null $contents, Section $section, Bit[] $bits --}}
 	{{-- Available methods: $bit(string $uid): Bit|null, $bitsOfType(string $type): Collection --}}
-
-    {{-- This is a sample implementation, using components defined in the "antonioprimera/laravel-site-components" package --}}
-	<x-site-section-container>
-		<x-site-section-title :$section/>
-
-		<div class="">
-			{!! \AntonioPrimera\Md\Facades\Md::parse($contents) !!}
-		</div>
-	</x-site-section-container>
 </div>

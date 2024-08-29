@@ -18,7 +18,6 @@ return [
         //section images will be resized to fit these dimensions
         'image' => [
             'max-width' => 1920,
-            'max-height' => 1080,
         ],
     ],
 

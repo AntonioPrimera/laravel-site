@@ -30,8 +30,7 @@ trait HasSingleImage
                     ->format('webp')
                     ->fit(
                         Fit::Max,
-                        config('site.sections.image.max-width'),
-                        config('site.sections.image.max-height')
+                        config('site.sections.image.max-width')
                     );
             });
     }

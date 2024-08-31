@@ -2,11 +2,9 @@
 namespace AntonioPrimera\Site\Components;
 
 use AntonioPrimera\Site\Models\Bit;
-use AntonioPrimera\Site\Models\SiteComponent;
 
 /**
- * @property Bit $bit
- *
+ * View properties (only available in the view):
  * @property string|null $type
  * @property string|null $title
  * @property string|null $short
@@ -14,21 +12,27 @@ use AntonioPrimera\Site\Models\SiteComponent;
  */
 abstract class BitViewComponent extends BaseSiteViewComponent
 {
-    protected array $exposedModelAttributes = [ 'type', 'title', 'short', 'contents' ];
+    public Bit $bit;
 
     public function __construct(mixed $bit = null, array $config = [])
     {
 		parent::__construct($bit, $config);
     }
 
+    protected function bit(mixed $componentOrUid): Bit
+    {
+        return bit($componentOrUid);
+    }
+
     //--- Implementation of abstract methods --------------------------------------------------------------------------
 
-    protected function determineModelInstance(mixed $componentOrUid): SiteComponent
+    final protected function setup(mixed $componentOrUid): void
     {
-        //if a bit() method exists in the child class, use it to get the model instance
-        //otherwise, use the global bit() helper function
-        return method_exists($this, 'bit')
-            ? $this->bit($componentOrUid)
-            : bit($componentOrUid);
+        //determine the section model instance
+        $this->bit = $this->bit($componentOrUid);
+
+        //expose the bit attributes to the view
+        $this->exposeModelAttributes($this->bit, ['type', 'title', 'short', 'contents']);
+        $this->exposeModelUnstructuredData($this->bit);
     }
 }

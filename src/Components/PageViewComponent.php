@@ -4,23 +4,17 @@ namespace AntonioPrimera\Site\Components;
 use AntonioPrimera\Site\Facades\Site;
 use AntonioPrimera\Site\Models\Page;
 use AntonioPrimera\Site\Models\Section;
-use AntonioPrimera\Site\Models\SiteComponent;
 use Illuminate\Support\Collection;
 
 /**
- * @property Page $model     //available in the component class
- *
  * View properties (only available in the view):
- * @property Page $page
  * @property string|null $title
  * @property string|null $short
  * @property string|null $contents
- *
- * @property Collection|null $sections
  */
 abstract class PageViewComponent extends BaseSiteViewComponent
 {
-    protected array $exposedModelAttributes = ['title', 'short', 'contents'];
+    public Page $page;
 
 	//the sections of the page (additional data containers)
 	public Collection|null $sections;
@@ -28,27 +22,28 @@ abstract class PageViewComponent extends BaseSiteViewComponent
     public function __construct(mixed $page = null, array $config = [])
     {
 		parent::__construct($page, $config);
-        $this->sections = $this->model->sections;
     }
-
-    /**
-     * Return the page instance for this component
-     * This method is just syntactic sugar for 'determineModelInstance(...)'
-     */
-    protected abstract function page(mixed $pageOrUid): Page;
 
     /**
      * Get a section of this page by its uid
      */
 	public function section(string $uid): Section|null
 	{
-        return Site::pageSection($uid, $this->model);
+        return Site::pageSection($uid, $this->page);
 	}
+
+    protected abstract function page(mixed $pageOrUid): Page;
 
     //--- Implementation of abstract methods --------------------------------------------------------------------------
 
-    protected function determineModelInstance(mixed $componentOrUid): SiteComponent
+    final protected function setup(mixed $componentOrUid): void
     {
-        return $this->page($componentOrUid);
+        //determine the section model instance and load its sections
+        $this->page = $this->page($componentOrUid);
+        $this->sections = $this->page->sections;
+
+        //expose the bit attributes to the view
+        $this->exposeModelAttributes($this->page, ['title', 'short', 'contents']);
+        $this->exposeModelUnstructuredData($this->page);
     }
 }

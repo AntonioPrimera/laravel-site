@@ -76,3 +76,18 @@ function cleanupFiles(...$paths): void
     foreach ($paths as $path)
         cleanupFile($path);
 }
+
+function injectString(string $contents, string $needle, string $inject): string
+{
+    $pos = strpos($contents, $needle);
+    if ($pos === false)
+        return $contents;
+
+    return substr_replace($contents, $inject, $pos + strlen($needle), 0);
+}
+
+function injectInFile(string $path, string $needle, string $inject): void
+{
+    $contents = injectString(file_get_contents($path), $needle, $inject);
+    file_put_contents($path, $contents);
+}

@@ -11,23 +11,18 @@ use Illuminate\View\Component;
 abstract class BaseSiteViewComponent extends Component
 {
 	use IsConfigurable;
-    public SiteComponent $model;                    //the model instance for this component
-    protected array $exposedModelAttributes = [];   //model attributes exposed to the view (will be made available in $modelAttributes)
-    protected array $dynamicAttributes = [];        //model dynamic attributes (from the data container) exposed to the view
-    protected array $modelAttributes = [];          //model attributes exposed to the view
+
+    protected array $dynamicAttributes = [];    //model dynamic attributes (from the data container) exposed to the view
+    protected array $modelAttributes = [];      //model attributes exposed to the view
 
     public function __construct(mixed $component, array $config = [])
     {
 		$this->setInitialConfig($config);
-        $this->model = $this->determineModelInstance($component);
-        $this->exposeModelByClassName($this->model);
-        $this->exposeModelAttributes($this->model);
-        $this->exposeModelUnstructuredData($this->model);
-
+        $this->setup($component);
 		$this->mount();
     }
 
-	public function mount(): void
+	protected function mount(): void
 	{
 		//override this method in child classes to prepare the data for the view
 	}
@@ -46,10 +41,9 @@ abstract class BaseSiteViewComponent extends Component
     //--- Abstract methods --------------------------------------------------------------------------------------------
 
     /**
-     * Return the model instance for this component
-     * e.g. return section($componentOrUid) for a SectionViewComponent;
+     * Determine the model instance for this component and set up the component properties
      */
-    protected abstract function determineModelInstance(mixed $componentOrUid): SiteComponent;
+    protected abstract function setup(mixed $componentOrUid): void;
 
     //--- Protected helpers -------------------------------------------------------------------------------------------
 
@@ -76,9 +70,9 @@ abstract class BaseSiteViewComponent extends Component
     /**
      * Fill the $modelAttributes array with the model attributes that should be exposed to the view
      */
-    protected function exposeModelAttributes(SiteComponent $model): void
+    protected function exposeModelAttributes(SiteComponent $model, array $attributeNames): void
     {
-        foreach ($this->exposedModelAttributes as $attribute)
+        foreach ($attributeNames as $attribute)
             $this->modelAttributes[$attribute] = $model->$attribute;
     }
 
@@ -90,12 +84,12 @@ abstract class BaseSiteViewComponent extends Component
         $this->dynamicAttributes = array_merge($this->dynamicAttributes, $model->getData() ?? []);
     }
 
-    /**
-     * Expose the model instance to the view by its class name (lowercase)
-     * e.g. if the model is a Section, expose it as $section to the view
-     */
-    protected function exposeModelByClassName($model): void
-    {
-        $this->dynamicAttributes[Str::lower(class_basename($model))] = $model;
-    }
+    ///**
+    // * Expose the model instance to the view by its class name (lowercase)
+    // * e.g. if the model is a Section, expose it as $section to the view
+    // */
+    //protected function exposeModelByClassName($model): void
+    //{
+    //    $this->dynamicAttributes[Str::lower(class_basename($model))] = $model;
+    //}
 }

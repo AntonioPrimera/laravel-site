@@ -4,21 +4,17 @@ namespace AntonioPrimera\Site\Components;
 use AntonioPrimera\Site\Facades\Site;
 use AntonioPrimera\Site\Models\Bit;
 use AntonioPrimera\Site\Models\Section;
-use AntonioPrimera\Site\Models\SiteComponent;
 use Illuminate\Support\Collection;
 
 /**
- * @property Section $model     //available in the component class
- *
  * View properties (only available in the view):
- * @property Section $section
  * @property string|null $title
  * @property string|null $short
  * @property string|null $contents
  */
 abstract class SectionViewComponent extends BaseSiteViewComponent
 {
-    protected array $exposedModelAttributes = ['title', 'short', 'contents'];
+    public Section $section;
 
 	//the bits of the section (additional data containers)
 	public Collection|null $bits;
@@ -26,7 +22,6 @@ abstract class SectionViewComponent extends BaseSiteViewComponent
     public function __construct(mixed $section = null, array $config = [])
     {
 		parent::__construct($section, $config);
-        $this->bits = $this->model->bits;
     }
 
     /**
@@ -34,7 +29,7 @@ abstract class SectionViewComponent extends BaseSiteViewComponent
      */
 	public function bit(string $uid): Bit|null
 	{
-        return Site::sectionBit($uid, $this->model);
+        return Site::sectionBit($uid, $this->section);
 	}
 
     public function bitsOfType(string $type): Collection
@@ -42,14 +37,21 @@ abstract class SectionViewComponent extends BaseSiteViewComponent
         return $this->bits->filter(fn (Bit $bit) => $bit->type === $type);
     }
 
+    protected function section(mixed $componentOrUid): Section
+    {
+        return section($componentOrUid);
+    }
+
     //--- Implementation of abstract methods --------------------------------------------------------------------------
 
-    protected function determineModelInstance(mixed $componentOrUid): SiteComponent
+    final protected function setup(mixed $componentOrUid): void
     {
-        //if a section() method exists in the child class, use it to get the model instance
-        //otherwise, use the global section() helper function
-        return method_exists($this, 'section')
-            ? $this->section($componentOrUid)
-            : section($componentOrUid);
+        //determine the section model instance and load its bits
+        $this->section = $this->section($componentOrUid);
+        $this->bits = $this->section->bits;
+
+        //expose the section attributes to the view
+        $this->exposeModelAttributes($this->section, ['title', 'short', 'contents']);
+        $this->exposeModelUnstructuredData($this->section);
     }
 }

@@ -2,35 +2,30 @@
 namespace DUMMY_NAMESPACE;
 
 use AntonioPrimera\Site\Components\SectionViewComponent;
+use Illuminate\Support\Collection;
+use AntonioPrimera\Site\Models\Bit;
 
 /**
- * Available public properties (usable in the blade view):
- * @property \AntonioPrimera\Site\Models\Section $section
+ * View properties (only available in the view):
  * @property string|null $title
  * @property string|null $short
  * @property string|null $contents
- * @property \Illuminate\Support\Collection|null $bits
  *
  * Available public methods (usable in the blade view):
- * @method \AntonioPrimera\Site\Models\Bit|null bit(string $uid)
- * @method \Illuminate\Support\Collection bitsOfType(string $type)
+ * @method Bit|null bit(string $uid)
+ * @method Collection bitsOfType(string $type)
  */
 class DUMMY_CLASS extends SectionViewComponent
 {
-	//TODO: define public properties, corresponding to the attributes in the 'data' array of the section model
-	//TODO: define any public methods that you want to use in the view here
+	/**
+     * TODO:
+     * - Add any custom logic to the mount() method or delete it if not needed. The mount method is called
+     *   at the end of the component constructor, so you can use it to set any properties you need
+     * - Optionally override the section() method to return a custom section instance
+     */
 
-	public function mount(): void
+	protected function mount(): void
 	{
 		//TODO: override this method if you want to set any properties immediately after the component is created
 	}
-
-
-	// Uncomment this method if this component always renders the same section and return the section instance.
-	// The $sectionOrUid parameter is the 'section' prop received by the component in the blade view
-	//
-	//protected function section(Section|string|null $sectionOrUid): Section
-    //{
-    //    //
-    //}
 }

@@ -2,35 +2,39 @@
 namespace DUMMY_NAMESPACE;
 
 use AntonioPrimera\Site\Components\PageViewComponent;
+use AntonioPrimera\Site\Models\Section;
+use AntonioPrimera\Site\Models\Page;
 
 /**
- * Available public properties (usable in the blade view):
- * @property \AntonioPrimera\Site\Models\Page $page
+ * View properties (only available in the view):
  * @property string|null $title
  * @property string|null $short
  * @property string|null $contents
- * @property \Illuminate\Support\Collection|null $sections
  *
  * Available public methods (usable in the blade view):
- * @method \AntonioPrimera\Site\Models\Section|null section(string $uid)
+ * @method Section|null section(string $uid)
  */
 class DUMMY_CLASS extends PageViewComponent
 {
-	//TODO: define public properties, corresponding to the attributes in the 'data' array of the page model
-	//TODO: define any public methods that you want to use in the view here
+	/**
+     * TODO:
+     * - Add any custom logic to the mount() method or delete it if not needed. The mount method is called
+     *   at the end of the component constructor, so you can use it to set any properties you need
+     * - Implement the page() method to return the page instance that this component renders
+     */
 
-	public function mount(): void
+	protected function mount(): void
 	{
 		//TODO: override this method if you want to set any properties immediately after the component is created
 	}
 
 
 	/**
-     * Implement this method to return the page instance that this component renders. Optionally, you can use the
-     * $pageOrUid parameter provided as the 'page' prop to the component in the blade view, to return a
-     * different page instance based on the prop. This method is required (abstract in the parent).
+     * Implement this method to return the page instance that this component renders.
+     * You can use the $pageOrUid parameter provided as the 'page' prop in the
+     * blade view, to dynamically determine the page instance.
      */
-	protected function page(string|Page|null $pageOrUid): Page
+	protected function page(mixed $pageOrUid): Page
     {
         //e.g.: return page('about-us');
         // OR : return page($pageOrUid);

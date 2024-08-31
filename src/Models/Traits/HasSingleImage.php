@@ -38,26 +38,33 @@ trait HasSingleImage
     //--- Accessors / Mutators ----------------------------------------------------------------------------------------
 
     /**
-     * Get / set the image for this model
+     * Get the image for this model
      */
     public function image(): Attribute
     {
-        return Attribute::make(
-            get: fn () => $this->getImage(),
-            set: fn (Media $value) => $this->setImage($value->getPath())
-        );
+        return Attribute::get(fn () => $this->getImage());
     }
 
-    /**
-     * Get / set the alternative text for the image
-     */
-    public function imageAlt(): Attribute
+    ///**
+    // * Get / set the alternative text for the image
+    // */
+    //public function imageAlt(): Attribute
+    //{
+    //    return Attribute::make(
+    //        get: fn () => $this->getImageAlt(),
+    //        set: fn (string $value) => $this->setImageAlt($value)
+    //    );
+    //}
+
+    public function getImageAltAttribute(): string
     {
-        return Attribute::make(
-            get: fn () => $this->getImageAlt(),
-            set: fn (string $value) => $this->setImageAlt($value)
-        );
+        return $this->getImageAlt();
     }
+
+    //public function setImageAltAttribute(string $value): void
+    //{
+    //    $this->setImageAlt($value);
+    //}
 
     //--- Public API --------------------------------------------------------------------------------------------------
 
@@ -94,7 +101,6 @@ trait HasSingleImage
     public function setImageAlt(string|array $alt): static
     {
         $this->image?->setCustomProperty('alt', $alt)->save();
-
         return $this;
     }
 

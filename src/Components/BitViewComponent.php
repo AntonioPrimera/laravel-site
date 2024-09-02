@@ -19,7 +19,7 @@ abstract class BitViewComponent extends BaseSiteViewComponent
 		parent::__construct($bit, $config);
     }
 
-    protected function bit(mixed $componentOrUid): Bit
+    protected function getBitInstance(mixed $componentOrUid): Bit
     {
         return bit($componentOrUid);
     }
@@ -29,7 +29,7 @@ abstract class BitViewComponent extends BaseSiteViewComponent
     final protected function setup(mixed $componentOrUid): void
     {
         //determine the section model instance
-        $this->bit = $this->bit($componentOrUid);
+        $this->bit = $this->getBitInstance($componentOrUid);
 
         //expose the bit attributes to the view
         $this->exposeModelAttributes($this->bit, ['type', 'title', 'short', 'contents']);

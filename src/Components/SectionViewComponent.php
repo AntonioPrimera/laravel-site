@@ -37,7 +37,7 @@ abstract class SectionViewComponent extends BaseSiteViewComponent
         return $this->bits->filter(fn (Bit $bit) => $bit->type === $type);
     }
 
-    protected function section(mixed $componentOrUid): Section
+    protected function getSectionInstance(mixed $componentOrUid): Section
     {
         return section($componentOrUid);
     }
@@ -47,7 +47,7 @@ abstract class SectionViewComponent extends BaseSiteViewComponent
     final protected function setup(mixed $componentOrUid): void
     {
         //determine the section model instance and load its bits
-        $this->section = $this->section($componentOrUid);
+        $this->section = $this->getSectionInstance($componentOrUid);
         $this->bits = $this->section->bits;
 
         //expose the section attributes to the view

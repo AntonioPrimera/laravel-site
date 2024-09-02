@@ -32,14 +32,14 @@ abstract class PageViewComponent extends BaseSiteViewComponent
         return Site::pageSection($uid, $this->page);
 	}
 
-    protected abstract function page(mixed $pageOrUid): Page;
+    protected abstract function getPageInstance(mixed $pageOrUid): Page;
 
     //--- Implementation of abstract methods --------------------------------------------------------------------------
 
     final protected function setup(mixed $componentOrUid): void
     {
         //determine the section model instance and load its sections
-        $this->page = $this->page($componentOrUid);
+        $this->page = $this->getPageInstance($componentOrUid);
         $this->sections = $this->page->sections;
 
         //expose the bit attributes to the view

@@ -20,7 +20,7 @@ class DUMMY_CLASS extends PageViewComponent
      * TODO:
      * - Add any custom logic to the mount() method or delete it if not needed. The mount method is called
      *   at the end of the component constructor, so you can use it to set any properties you need
-     * - Implement the page() method to return the page instance that this component renders
+     * - Implement the getPageInstance() method to return the page instance that this component renders
      */
 
 	protected function mount(): void
@@ -34,7 +34,7 @@ class DUMMY_CLASS extends PageViewComponent
      * You can use the $pageOrUid parameter provided as the 'page' prop in the
      * blade view, to dynamically determine the page instance.
      */
-	protected function page(mixed $pageOrUid): Page
+	protected function getPageInstance(mixed $pageOrUid): Page
     {
         //e.g.: return page('about-us');
         // OR : return page($pageOrUid);

@@ -21,7 +21,7 @@ class DUMMY_CLASS extends SectionViewComponent
      * TODO:
      * - Add any custom logic to the mount() method or delete it if not needed. The mount method is called
      *   at the end of the component constructor, so you can use it to set any properties you need
-     * - Optionally override the section() method to return a custom section instance
+     * - Optionally override the getSectionInstance() method to return a custom section instance
      */
 
 	protected function mount(): void
